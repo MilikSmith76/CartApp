@@ -19,7 +19,7 @@ class CartGrocery(BaseModel):
     purchased_at = models.DateTimeField(default=None, blank=True, null=True)
 
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, db_column='cart_id')
-    Grocery = models.ForeignKey(
+    grocery = models.ForeignKey(
         Grocery, on_delete=models.CASCADE, db_column='grocery_id'
     )
 

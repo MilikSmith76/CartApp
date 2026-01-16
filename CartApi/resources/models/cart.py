@@ -16,7 +16,7 @@ class Cart(BaseModel):
     name = models.CharField(max_length=200, unique=True)
     description = models.CharField(max_length=200, default='')
 
-    grocery = models.ManyToManyField(
+    groceries = models.ManyToManyField(
         Grocery, through='CartGrocery', through_fields=('cart', 'grocery')
     )
 
