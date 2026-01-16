@@ -2,8 +2,9 @@
 Serializer for the Grocery model.
 """
 
-from models import Grocery  # pylint: disable=import-error
 from rest_framework import serializers
+
+from resources.models import Grocery
 
 
 class GrocerySerializer(serializers.ModelSerializer):
