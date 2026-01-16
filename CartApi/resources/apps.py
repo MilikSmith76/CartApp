@@ -1,6 +1,7 @@
 """
 Django app for the Restful resource endpoints.
 """
+
 from django.apps import AppConfig
 
 
