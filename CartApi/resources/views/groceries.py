@@ -2,30 +2,24 @@
 Groceries View.
 """
 
-from rest_framework import status
+from rest_framework import filters, status
+from rest_framework.generics import ListAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
 from resources.models import Grocery
 from resources.serializers import GrocerySerializer
 
 
-class GroceriesView(APIView):
+class GroceriesView(ListAPIView):
     """
     View for retrieving a list of groceries, or creating a new one.
     """
 
-    def get(self, _request: Request) -> Response:
-        """
-        Retrieves a list of Grocery records.
-
-        :return: A list of Grocery records.
-        :rtype: Response
-        """
-        groceries = Grocery.objects.all()  # pylint: disable=no-member
-        serializer = GrocerySerializer(groceries, many=True)
-        return Response(serializer.data)
+    queryset = Grocery.objects.filter(deleted=False)  # pylint: disable=no-member
+    serializer_class = GrocerySerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name']
 
     def post(self, request: Request) -> Response:
         """

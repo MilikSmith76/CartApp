@@ -4,6 +4,8 @@ Abstract base model for resource models.
 
 from django.db import models
 
+from utils.constants import APP_MANAGED_TABLES
+
 
 class BaseModel(models.Model):
     """
@@ -22,4 +24,4 @@ class BaseModel(models.Model):
 
         abstract = True
         ordering = ['id', 'created_at']
-        managed = False
+        managed = APP_MANAGED_TABLES

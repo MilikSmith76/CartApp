@@ -2,30 +2,24 @@
 Carts View.
 """
 
-from rest_framework import status
+from rest_framework import filters, status
+from rest_framework.generics import ListAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
 from resources.models import Cart
 from resources.serializers import CartSerializer
 
 
-class CartsView(APIView):
+class CartsView(ListAPIView):
     """
     View for retrieving a list of carts, or creating a new one.
     """
 
-    def get(self, _request: Request):
-        """
-        Retrieves a list of Cart records.
-
-        :return: A list of Cart records.
-        :rtype: Response
-        """
-        groceries = Cart.objects.all()  # pylint: disable=no-member
-        serializer = CartSerializer(groceries, many=True)
-        return Response(serializer.data)
+    queryset = Cart.objects.filter(deleted=False)  # pylint: disable=no-member
+    serializer_class = CartSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name']
 
     def post(self, request: Request):
         """

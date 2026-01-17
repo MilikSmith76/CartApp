@@ -13,9 +13,17 @@ dependencies = [
 [project.optional-dependencies]
 linter = ["ruff"]
 
+[tool.pylint.main]
+ignore = [
+    "**/migrations/**"
+]
+
 [tool.ruff]
 line-length = 88
 indent-width = 4
+exclude = [
+    "**/migrations/**"
+]
 
 [tool.ruff.lint]
 extend-select = ["E501"]
