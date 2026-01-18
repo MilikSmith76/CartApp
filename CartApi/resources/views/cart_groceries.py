@@ -3,7 +3,7 @@ Cart Groceries View.
 """
 
 from rest_framework import status
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListCreateAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
 
@@ -11,7 +11,7 @@ from resources.models import CartGrocery
 from resources.serializers import CartGrocerySerializer
 
 
-class CartGroceriesView(ListAPIView):
+class CartGroceriesView(ListCreateAPIView):
     """
     View for retrieving a list of cart groceries, creating a new one,
     and bulk upserting cart groceries.
@@ -31,26 +31,6 @@ class CartGroceriesView(ListAPIView):
 
         return queryset
 
-    def post(self, request: Request) -> Response:
-        """
-        Creates a new Cart Grocery record.
-
-        :param request:
-            The incoming request for this endpoint.
-            Should contain a body representing a Cart Grocery item.
-        :type request: Request
-
-        :return: The created Cart Grocery record.
-        :rtype: Response
-        """
-        serializer = CartGrocerySerializer(data=request.data)
-
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
     def put(self, request: Request) -> Response:
         """
         Bulk upserts Cart Grocery records.
@@ -64,21 +44,31 @@ class CartGroceriesView(ListAPIView):
         :return: The array of upserted Cart Grocery records.
         :rtype: Response
         """
-        bulk_serializer = CartGrocerySerializer(data=request.data['items'], many=True)
+        items = request.data.get('items', None)
 
-        if not bulk_serializer.is_valid():
-            return Response(bulk_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if not items:
+            error = {
+                'message': 'The request is missing an "items" attribute in the body.'
+            }
+
+            return Response(error, status=status.HTTP_400_BAD_REQUEST)
+
+        bulk_validation = CartGrocerySerializer(data=items, many=True)
+
+        if not bulk_validation.is_valid():
+            return Response(bulk_validation.errors, status=status.HTTP_400_BAD_REQUEST)
 
         response_items = []
 
-        for item in request.data['items']:
+        for item in items:
             cart_grocery_id = item.get('id', None)
 
             serializer = None
 
             if cart_grocery_id is None:
                 serializer = CartGrocerySerializer(data=item)
-            else:
+
+            if cart_grocery_id is not None:
                 cart_grocery = CartGrocery.objects.get(pk=cart_grocery_id)  # pylint: disable=no-member
                 serializer = CartGrocerySerializer(cart_grocery, data=item)
 

@@ -6,19 +6,24 @@ import datetime
 
 from django.http import Http404
 from rest_framework import status
+from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
 from resources.models import CartGrocery
 from resources.serializers import CartGrocerySerializer
 
 
-class CartGroceryView(APIView):
+class CartGroceryView(RetrieveUpdateAPIView):
     """
     View for getting individual cart groceries, updating a cart grocery,
     and deleting a cart grocery.
     """
+
+    queryset = CartGrocery.objects.all()  # pylint: disable=no-member
+    serializer_class = CartGrocerySerializer
+    lookup_field = 'id'
+    lookup_url_kwarg = 'cart_grocery_id'
 
     def get_cart_grocery(self, cart_grocery_id: int) -> CartGrocery:
         """
@@ -36,43 +41,6 @@ class CartGroceryView(APIView):
             return CartGrocery.objects.get(pk=cart_grocery_id)  # pylint: disable=no-member
         except CartGrocery.DoesNotExist:  # pylint: disable=no-member
             raise Http404  # pylint: disable=raise-missing-from
-
-    def get(self, _request: Request, cart_grocery_id: int) -> Response:
-        """
-        Retrieves an individual Cart Grocery record.
-
-        :param cart_grocery_id: The id of the Cart Grocery record to retrieve.
-        :type cart_grocery_id: int
-
-        :return: The retrieved Cart Grocery record.
-        :rtype: Response
-        """
-        cart = self.get_cart_grocery(cart_grocery_id)
-        serializer = CartGrocerySerializer(cart)
-        return Response(serializer.data)
-
-    def put(self, request: Request, cart_grocery_id: int) -> Response:
-        """
-        Updates a Cart Grocery record.
-
-        :param request:
-            The incoming request for this endpoint.
-            Should contain a body representing a Cart Grocery record.
-        :type request: Request
-        :param cart_grocery_id: The id of the Cart Grocery record to update.
-        :type cart_grocery_id: int
-
-        :return: The updated Cart Grocery record.
-        :rtype: Response
-        """
-        cart = self.get_cart_grocery(cart_grocery_id)
-        serializer = CartGrocerySerializer(cart, data=request.data)
-
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, _request: Request, cart_grocery_id: int) -> Response:
         """

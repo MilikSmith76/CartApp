@@ -6,26 +6,31 @@ import datetime
 
 from django.http import Http404
 from rest_framework import status
+from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
 from resources.models import Grocery
 from resources.serializers import GrocerySerializer
 
 
-class GroceryView(APIView):
+class GroceryView(RetrieveUpdateAPIView):
     """
     View for getting individual groceries, updating a grocery item,
     and deleting a grocery item.
     """
 
+    queryset = Grocery.objects.all()  # pylint: disable=no-member
+    serializer_class = GrocerySerializer
+    lookup_field = 'id'
+    lookup_url_kwarg = 'grocery_id'
+
     def get_grocery(self, grocery_id: int) -> Grocery:
         """
         A helper method for getting a Grocery record by id.
 
-        :param id: The id of the Grocery record to retrieve.
-        :type id: int
+        :param grocery_id: The id of the Grocery record to retrieve.
+        :type grocery_id: int
 
         :return: The retrieved Grocery record.
         :rtype: Grocery
@@ -34,43 +39,6 @@ class GroceryView(APIView):
             return Grocery.objects.get(pk=grocery_id)  # pylint: disable=no-member
         except Grocery.DoesNotExist:  # pylint: disable=no-member
             raise Http404  # pylint: disable=raise-missing-from
-
-    def get(self, _request: Request, grocery_id: int) -> Response:
-        """
-        Retrieves an individual Grocery record.
-
-        :param grocery_id: The id of the Grocery record to retrieve.
-        :type grocery_id: int
-
-        :return: The retrieved Grocery record.
-        :rtype: Response
-        """
-        grocery = self.get_grocery(grocery_id)
-        serializer = GrocerySerializer(grocery)
-        return Response(serializer.data)
-
-    def put(self, request: Request, grocery_id: int) -> Response:
-        """
-        Updates a Grocery record.
-
-        :param request:
-            The incoming request for this endpoint.
-            Should contain a body representing a Grocery record.
-        :type request: Request
-        :param grocery_id: The id of the Grocery record to update.
-        :type grocery_id: int
-
-        :return: The updated Grocery record.
-        :rtype: Response
-        """
-        grocery = self.get_grocery(grocery_id)
-        serializer = GrocerySerializer(grocery, data=request.data)
-
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, _request: Request, grocery_id: int) -> Response:
         """
