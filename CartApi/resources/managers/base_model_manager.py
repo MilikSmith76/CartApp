@@ -24,6 +24,7 @@ class BaseModelManager(Manager):
 
         :raises Http404: If id record does not exist.
         """
+
         try:
             return self.get(pk=id_value)
         except ObjectDoesNotExist:

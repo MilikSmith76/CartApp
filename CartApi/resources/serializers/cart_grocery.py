@@ -68,6 +68,7 @@ class CartGrocerySerializer(ModelSerializer):
 
         :raises ValidationError: If present id does not exist.
         """
+
         if not id:
             return
 

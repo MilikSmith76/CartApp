@@ -14,4 +14,5 @@ class ActiveBaseModelManager(BaseModelManager):
         """
         The query set for retrieving active Model records.
         """
+
         return super().get_queryset().filter(deleted=False)

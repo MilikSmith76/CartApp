@@ -23,6 +23,7 @@ class CartGroceriesView(ListCreateAPIView):
         """
         The query set for retrieving lists of cart groceries.
         """
+
         queryset = CartGrocery.active_objects.filter(purchased=False)
         cart_id = self.request.query_params.get('cart_id')
 
@@ -44,6 +45,7 @@ class CartGroceriesView(ListCreateAPIView):
         :return: The array of upserted Cart Grocery records.
         :rtype: Response
         """
+
         items = request.data.get('items', None)
 
         if not items:

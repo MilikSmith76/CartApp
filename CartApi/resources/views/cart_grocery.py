@@ -34,6 +34,7 @@ class CartGroceryView(RetrieveUpdateAPIView):
         :return: A response indicating that deleting the record was successful.
         :rtype: Response
         """
+
         cart = CartGrocery.active_objects.get_record(cart_grocery_id)
 
         cart.deleted = True
