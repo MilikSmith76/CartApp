@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "fix": "eslint --fix",
-    "prettier_base": "prettier ./{app,__test__,__e2e__,__component__}/**/**.{ts,tsx,html,css}",
+    "prettier_base": "prettier ./{app,interfaces,__test__,__e2e__,__component__}/**/**.{ts,tsx,html,css}",
     "prettier": "npm run prettier_base -- --check",
     "prettify": "npm run prettier_base -- --write",
     "format": "npm run fix && npm run prettify",
