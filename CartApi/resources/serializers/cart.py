@@ -2,19 +2,15 @@
 Serializer for the Cart model.
 """
 
-from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer
 
 from resources.models import Cart
 
-from .grocery import GrocerySerializer
 
-
-class CartSerializer(serializers.ModelSerializer):
+class CartSerializer(ModelSerializer):
     """
     Class for the Cart serializer.
     """
-
-    groceries = GrocerySerializer(read_only=True, many=True)
 
     class Meta:
         """
@@ -26,5 +22,4 @@ class CartSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'description',
-            'groceries',
         ]

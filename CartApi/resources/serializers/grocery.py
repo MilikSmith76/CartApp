@@ -2,12 +2,12 @@
 Serializer for the Grocery model.
 """
 
-from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer
 
 from resources.models import Grocery
 
 
-class GrocerySerializer(serializers.ModelSerializer):
+class GrocerySerializer(ModelSerializer):
     """
     Class for the Grocery serializer.
     """

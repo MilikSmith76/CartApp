@@ -2,7 +2,12 @@
 Serializer for the CartGrocery model.
 """
 
-from rest_framework import serializers
+from rest_framework.serializers import (
+    IntegerField,
+    ModelSerializer,
+    PrimaryKeyRelatedField,
+    ValidationError,
+)
 
 from resources.models import Cart, CartGrocery, Grocery
 
@@ -10,16 +15,16 @@ from .cart import CartSerializer
 from .grocery import GrocerySerializer
 
 
-class CartGrocerySerializer(serializers.ModelSerializer):
+class CartGrocerySerializer(ModelSerializer):
     """
     Class for the CartGrocery serializer.
     """
 
-    id = serializers.IntegerField(read_only=False, required=False)
+    id = IntegerField(read_only=False, required=False)
 
     cart = CartSerializer(read_only=True)
 
-    cart_id = serializers.PrimaryKeyRelatedField(
+    cart_id = PrimaryKeyRelatedField(
         queryset=Cart.objects.filter(deleted=False),  # pylint: disable=no-member
         source='cart',
         write_only=True,
@@ -27,7 +32,7 @@ class CartGrocerySerializer(serializers.ModelSerializer):
 
     grocery = GrocerySerializer(read_only=True)
 
-    grocery_id = serializers.PrimaryKeyRelatedField(
+    grocery_id = PrimaryKeyRelatedField(
         queryset=Grocery.objects.filter(deleted=False),  # pylint: disable=no-member
         source='grocery',
         write_only=True,
@@ -69,6 +74,6 @@ class CartGrocerySerializer(serializers.ModelSerializer):
             CartGrocery.objects.get(pk=value)  # pylint: disable=no-member
             return value
         except CartGrocery.DoesNotExist:  # pylint: disable=no-member
-            raise serializers.ValidationError(  # pylint: disable=raise-missing-from
+            raise ValidationError(  # pylint: disable=raise-missing-from
                 f'Invalid pk "{value}" - object does not exist.'
             )
