@@ -2,20 +2,20 @@
 Abstract base model for resource models.
 """
 
-from django.db import models
+from django.db.models import BooleanField, DateTimeField, Model
 
 from utils.constants import APP_MANAGED_TABLES
 
 
-class BaseModel(models.Model):
+class BaseModel(Model):
     """
     Class for the base model.
     """
 
-    deleted = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    deleted_at = models.DateTimeField(default=None, blank=True, null=True)
+    deleted = BooleanField(default=False)
+    created_at = DateTimeField(auto_now_add=True)
+    updated_at = DateTimeField(auto_now=True)
+    deleted_at = DateTimeField(default=None, blank=True, null=True)
 
     class Meta:
         """

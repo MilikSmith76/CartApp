@@ -2,7 +2,13 @@
 Model for the Cart Grocery table.
 """
 
-from django.db import models
+from django.db.models import (
+    CASCADE,
+    BooleanField,
+    DateTimeField,
+    ForeignKey,
+    IntegerField,
+)
 
 from .base_model import BaseModel
 from .cart import Cart
@@ -14,14 +20,12 @@ class CartGrocery(BaseModel):
     Class for the Cart Grocery model.
     """
 
-    quantity = models.IntegerField()
-    purchased = models.BooleanField(default=False)
-    purchased_at = models.DateTimeField(default=None, blank=True, null=True)
+    quantity = IntegerField()
+    purchased = BooleanField(default=False)
+    purchased_at = DateTimeField(default=None, blank=True, null=True)
 
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, db_column='cart_id')
-    grocery = models.ForeignKey(
-        Grocery, on_delete=models.CASCADE, db_column='grocery_id'
-    )
+    cart = ForeignKey(Cart, on_delete=CASCADE, db_column='cart_id')
+    grocery = ForeignKey(Grocery, on_delete=CASCADE, db_column='grocery_id')
 
     class Meta(BaseModel.Meta):
         """

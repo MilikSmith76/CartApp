@@ -2,7 +2,7 @@
 Model for the Cart table.
 """
 
-from django.db import models
+from django.db.models import CharField, ManyToManyField
 
 from .base_model import BaseModel
 from .grocery import Grocery
@@ -13,10 +13,10 @@ class Cart(BaseModel):
     Class for the Cart model.
     """
 
-    name = models.CharField(max_length=200, unique=True)
-    description = models.CharField(max_length=200, default='')
+    name = CharField(max_length=200, unique=True)
+    description = CharField(max_length=200, default='')
 
-    groceries = models.ManyToManyField(
+    groceries = ManyToManyField(
         Grocery, through='CartGrocery', through_fields=('cart', 'grocery')
     )
 
