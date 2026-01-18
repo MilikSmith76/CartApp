@@ -14,7 +14,7 @@ class GroceriesView(ListCreateAPIView):
     View for retrieving a list of groceries, or creating a new one.
     """
 
-    queryset = Grocery.objects.filter(deleted=False)  # pylint: disable=no-member
+    queryset = Grocery.active_objects.all()
     serializer_class = GrocerySerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['name']

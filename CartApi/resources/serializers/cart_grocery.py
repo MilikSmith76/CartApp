@@ -2,6 +2,7 @@
 Serializer for the CartGrocery model.
 """
 
+from django.http import Http404
 from rest_framework.serializers import (
     IntegerField,
     ModelSerializer,
@@ -71,9 +72,9 @@ class CartGrocerySerializer(ModelSerializer):
             return
 
         try:
-            CartGrocery.objects.get(pk=value)  # pylint: disable=no-member
+            CartGrocery.objects.get_record(value)
             return value
-        except CartGrocery.DoesNotExist:  # pylint: disable=no-member
+        except Http404:
             raise ValidationError(  # pylint: disable=raise-missing-from
                 f'Invalid pk "{value}" - object does not exist.'
             )

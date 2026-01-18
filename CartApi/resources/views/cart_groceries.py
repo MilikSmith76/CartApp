@@ -23,7 +23,7 @@ class CartGroceriesView(ListCreateAPIView):
         """
         The query set for retrieving lists of cart groceries.
         """
-        queryset = CartGrocery.objects.filter(deleted=False, purchased=False)  # pylint: disable=no-member
+        queryset = CartGrocery.active_objects.filter(purchased=False)
         cart_id = self.request.query_params.get('cart_id')
 
         if cart_id is not None:
@@ -69,7 +69,7 @@ class CartGroceriesView(ListCreateAPIView):
                 serializer = CartGrocerySerializer(data=item)
 
             if cart_grocery_id is not None:
-                cart_grocery = CartGrocery.objects.get(pk=cart_grocery_id)  # pylint: disable=no-member
+                cart_grocery = CartGrocery.objects.get_record(cart_grocery_id)
                 serializer = CartGrocerySerializer(cart_grocery, data=item)
 
             serializer.is_valid()

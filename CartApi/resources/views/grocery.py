@@ -2,9 +2,8 @@
 Grocery View.
 """
 
-import datetime
+from datetime import date
 
-from django.http import Http404
 from rest_framework import status
 from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.request import Request
@@ -25,21 +24,6 @@ class GroceryView(RetrieveUpdateAPIView):
     lookup_field = 'id'
     lookup_url_kwarg = 'grocery_id'
 
-    def get_grocery(self, grocery_id: int) -> Grocery:
-        """
-        A helper method for getting a Grocery record by id.
-
-        :param grocery_id: The id of the Grocery record to retrieve.
-        :type grocery_id: int
-
-        :return: The retrieved Grocery record.
-        :rtype: Grocery
-        """
-        try:
-            return Grocery.objects.get(pk=grocery_id)  # pylint: disable=no-member
-        except Grocery.DoesNotExist:  # pylint: disable=no-member
-            raise Http404  # pylint: disable=raise-missing-from
-
     def delete(self, _request: Request, grocery_id: int) -> Response:
         """
         Deletes a Grocery record.
@@ -50,10 +34,10 @@ class GroceryView(RetrieveUpdateAPIView):
         :return: A response indicating that deleting the record was successful.
         :rtype: Response
         """
-        grocery = self.get_grocery(grocery_id)
+        grocery = Grocery.active_objects.get_record(grocery_id)
 
         grocery.deleted = True
-        grocery.deleted_at = datetime.date.today()
+        grocery.deleted_at = date.today()
         grocery.save()
 
         success_message = {'success': True}

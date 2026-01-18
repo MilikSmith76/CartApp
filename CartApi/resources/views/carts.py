@@ -14,7 +14,7 @@ class CartsView(ListCreateAPIView):
     View for retrieving a list of carts, or creating a new one.
     """
 
-    queryset = Cart.objects.filter(deleted=False)  # pylint: disable=no-member
+    queryset = Cart.active_objects.all()
     serializer_class = CartSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['name']
