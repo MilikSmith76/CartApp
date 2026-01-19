@@ -77,7 +77,8 @@ class GroceryService {
 
     public async getPage(
         page: number = 0,
-        limit: number = DEFAULT_PAGE_SIZE
+        limit: number = DEFAULT_PAGE_SIZE,
+        search: string
     ): Promise<PaginationResponse<Grocery>> {
         const offset = page * limit;
 
@@ -87,6 +88,7 @@ class GroceryService {
                 params: {
                     limit,
                     offset,
+                    search,
                 },
             }
         );

@@ -10,7 +10,9 @@ import { BAD_REQUEST, getRequestParams } from '@/utils';
 const grocerySerice = new GroceryService();
 
 const GET = async (request: NextRequest): Promise<NextResponse> => {
-    const { limit, page } = getRequestParams(request.nextUrl.searchParams);
+    const { limit, page, search } = getRequestParams(
+        request.nextUrl.searchParams
+    );
 
     if (page && isNaN(+page)) {
         return NextResponse.json(
@@ -26,7 +28,7 @@ const GET = async (request: NextRequest): Promise<NextResponse> => {
         );
     }
 
-    const response = await grocerySerice.getPage(page, limit);
+    const response = await grocerySerice.getPage(page, limit, search);
 
     return NextResponse.json(response);
 };

@@ -62,7 +62,9 @@ class CartGroceryService {
         };
     }
 
-    public async bulkUpsert(input: CartGrocery[]): Promise<CartGrocery[]> {
+    public async bulkUpsert(
+        input: CartGrocery[]
+    ): Promise<BulkUpsertResponse<CartGrocery>> {
         const request: BulkUpsertRequest<CartGroceryApi> = {
             items: input.map(CartGroceryService.uiToApi),
         };
@@ -73,7 +75,11 @@ class CartGroceryService {
             BulkUpsertRequest<CartGroceryApi>
         >(this.endpoint, request);
 
-        return result.data.items.map(CartGroceryService.apiToUi);
+        const response: BulkUpsertResponse<CartGrocery> = {
+            items: result.data.items.map(CartGroceryService.apiToUi),
+        };
+
+        return response;
     }
 
     public async delete(id: number): Promise<SuccessResponse> {
