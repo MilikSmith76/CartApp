@@ -7,6 +7,7 @@ const Button = ({
     disabled,
     onClick,
     text,
+    type,
 }: ButtonProps): JSX.Element => {
     return (
         <button
@@ -16,6 +17,7 @@ const Button = ({
             }
             disabled={disabled}
             onClick={onClick}
+            type={type}
         >
             {text}
         </button>

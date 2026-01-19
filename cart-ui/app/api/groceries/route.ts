@@ -2,6 +2,8 @@ import type { NextRequest } from 'next/server';
 
 import { NextResponse } from 'next/server';
 
+import type { Grocery } from '@/interfaces';
+
 import { GroceryService } from '@/services';
 import { BAD_REQUEST, getRequestParams } from '@/utils';
 
@@ -29,4 +31,20 @@ const GET = async (request: NextRequest): Promise<NextResponse> => {
     return NextResponse.json(response);
 };
 
-export { GET };
+const POST = async (request: NextRequest): Promise<NextResponse> => {
+    const { description, imageUrl, name,  price, purchased } = await request.json();
+
+    const input: Grocery = {
+        description,
+        imageUrl,
+        name,
+        price,
+        purchased,
+    };
+
+    const response = await grocerySerice.create(input);
+
+    return NextResponse.json(response);
+};
+
+export { GET, POST };

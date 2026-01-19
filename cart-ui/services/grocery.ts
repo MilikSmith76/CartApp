@@ -12,6 +12,21 @@ import { DEFAULT_PAGE_SIZE } from '@/utils';
 class GroceryService {
     private endpoint = `${process.env.API_HOST}/groceries`;
 
+    public async create(input: Grocery): Promise<Grocery> {
+        const result = await axios.post<GroceryApi>(
+            this.endpoint,
+            input,
+        );
+
+        return this.apiToUi(result.data);
+    }
+
+    public async get(id: number): Promise<Grocery> {
+        const result = await axios.get<GroceryApi>(`${this.endpoint}/${id}`);
+
+        return this.apiToUi(result.data);;
+    }
+
     public async getPage(
         page: number = 0,
         limit: number = DEFAULT_PAGE_SIZE
