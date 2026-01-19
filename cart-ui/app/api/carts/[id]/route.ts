@@ -46,11 +46,11 @@ const PUT = async (
 
     const input: Cart = {
         description,
-        id,
+        id: +id,
         name,
     };
 
-    const response = await cartService.update(id, input);
+    const response = await cartService.update(+id, input);
 
     return NextResponse.json(response);
 };

@@ -1,3 +1,5 @@
+import type { AxiosResponse } from 'axios';
+
 import axios from 'axios';
 
 import type {
@@ -14,7 +16,11 @@ class CartService {
     private endpoint = `${process.env.API_HOST}/carts`;
 
     public async create(input: Cart): Promise<Cart> {
-        const result = await axios.post<CartApi>(this.endpoint, input);
+        const result = await axios.post<
+            CartApi,
+            AxiosResponse<CartApi>,
+            CartApi
+        >(this.endpoint, input);
 
         return result.data;
     }
@@ -53,15 +59,16 @@ class CartService {
         // the ui and the api are the same.
         return {
             count: result.data.count,
-            results: result.data.results as Cart[],
+            results: result.data.results,
         };
     }
 
     public async update(id: number, input: Cart): Promise<Cart> {
-        const result = await axios.put<CartApi>(
-            `${this.endpoint}/${id}`,
-            input
-        );
+        const result = await axios.put<
+            CartApi,
+            AxiosResponse<CartApi>,
+            CartApi
+        >(`${this.endpoint}/${id}`, input);
 
         return result.data;
     }

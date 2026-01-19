@@ -1,3 +1,5 @@
+import type { AxiosResponse } from 'axios';
+
 import axios from 'axios';
 
 import type {
@@ -5,6 +7,7 @@ import type {
     Grocery,
     GroceryApi,
     PaginationResponse,
+    SuccessResponse,
 } from '@/interfaces';
 
 import { DEFAULT_PAGE_SIZE } from '@/utils';
@@ -13,9 +16,21 @@ class GroceryService {
     private endpoint = `${process.env.API_HOST}/groceries`;
 
     public async create(input: Grocery): Promise<Grocery> {
-        const result = await axios.post<GroceryApi>(this.endpoint, input);
+        const result = await axios.post<
+            GroceryApi,
+            AxiosResponse<GroceryApi>,
+            GroceryApi
+        >(this.endpoint, this.uiToApi(input));
 
         return this.apiToUi(result.data);
+    }
+
+    public async delete(id: number): Promise<SuccessResponse> {
+        const result = await axios.delete<SuccessResponse>(
+            `${this.endpoint}/${id}`
+        );
+
+        return result.data;
     }
 
     public async get(id: number): Promise<Grocery> {
@@ -44,6 +59,16 @@ class GroceryService {
             count: result.data.count,
             results: result.data.results.map(this.apiToUi),
         };
+    }
+
+    public async update(id: number, input: Grocery): Promise<Grocery> {
+        const result = await axios.put<
+            GroceryApi,
+            AxiosResponse<GroceryApi>,
+            GroceryApi
+        >(`${this.endpoint}/${id}`, this.uiToApi(input));
+
+        return this.apiToUi(result.data);
     }
 
     private apiToUi({
