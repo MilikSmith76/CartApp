@@ -12,6 +12,18 @@ import { DEFAULT_PAGE_SIZE } from '@/utils';
 class CartService {
     private endpoint = `${process.env.API_HOST}/carts`;
 
+    public async create(input: Cart): Promise<Cart> {
+        const result = await axios.post<CartApi>(this.endpoint, input);
+
+        return result.data;
+    }
+
+    public async get(id: number): Promise<Cart> {
+        const result = await axios.get<CartApi>(`${this.endpoint}/${id}`);
+
+        return result.data;
+    }
+
     public async getPage(
         page: number = 0,
         limit: number = DEFAULT_PAGE_SIZE

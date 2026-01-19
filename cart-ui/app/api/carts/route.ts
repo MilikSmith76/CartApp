@@ -2,6 +2,8 @@ import type { NextRequest } from 'next/server';
 
 import { NextResponse } from 'next/server';
 
+import type { Cart } from '@/interfaces';
+
 import { CartService } from '@/services';
 import { BAD_REQUEST, getRequestParams } from '@/utils';
 
@@ -29,4 +31,17 @@ const GET = async (request: NextRequest): Promise<NextResponse> => {
     return NextResponse.json(response);
 };
 
-export { GET };
+const POST = async (request: NextRequest): Promise<NextResponse> => {
+    const { description, name } = await request.json();
+
+    const input: Cart = {
+        description,
+        name,
+    };
+
+    const response = await cartService.create(input);
+
+    return NextResponse.json(response);
+};
+
+export { GET, POST };

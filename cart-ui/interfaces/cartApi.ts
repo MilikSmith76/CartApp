@@ -1,6 +1,6 @@
 interface CartApi {
     description: string;
-    id: number;
+    id?: number;
     name: string;
 }
 

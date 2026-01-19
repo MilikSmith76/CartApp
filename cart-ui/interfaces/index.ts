@@ -12,4 +12,5 @@ export type * from './navbarLink';
 export type * from './paginationResponse';
 export type * from './rootLayoutProps';
 export type * from './textFormFieldProps';
+export type * from './updateCartPageProps';
 export type * from './updateGroceryPageProps';

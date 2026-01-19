@@ -2,6 +2,7 @@
 import type { JSX } from 'react';
 
 import axios from 'axios';
+import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import type { Cart, PaginationResponse } from '@/interfaces';
@@ -53,7 +54,13 @@ const CartsPage = (): JSX.Element => {
         <>
             <Header name='Carts' />
             <Main>
-                <div className='ml-auto grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3'>
+                <Link
+                    className='ml-auto flex w-fit cursor-pointer rounded-md bg-emerald-500 p-5 text-white hover:bg-emerald-300'
+                    href={'carts/new'}
+                >
+                    Create
+                </Link>
+                <div className='mt-5 ml-auto grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3'>
                     {carts.map((cart) => (
                         <CartCard cart={cart} key={cart.id} />
                     ))}
