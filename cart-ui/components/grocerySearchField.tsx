@@ -10,13 +10,13 @@ import {
 import axios from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 
-import type { Grocery, PaginationResponse } from '@/interfaces';
+import type {
+    Grocery,
+    GrocerySearchFieldProps,
+    PaginationResponse,
+} from '@/interfaces';
 
 import Button from './button';
-
-interface GrocerySearchFieldProps {
-    onAddGrocery?: (grocery: Grocery) => void;
-}
 
 const GrocerySearchField = ({
     onAddGrocery,

@@ -10,6 +10,7 @@ export type * from './cartGroceryAPi';
 export type * from './grocery';
 export type * from './groceryApi';
 export type * from './groceryCardProps';
+export type * from './grocerySearchFieldProps';
 export type * from './headerProps';
 export type * from './mainProps';
 export type * from './navbarLink';
