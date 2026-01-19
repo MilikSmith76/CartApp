@@ -2,6 +2,7 @@
 import type { JSX } from 'react';
 
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 import { use, useCallback, useEffect, useState } from 'react';
 import { Form } from 'react-final-form';
 
@@ -13,6 +14,8 @@ import { groceryValidator } from '@/validators';
 
 const UpdateGroceryPage = ({ params }: UpdateGroceryPageProps): JSX.Element => {
     const { id } = use(params);
+
+    const router = useRouter();
 
     const [grocery, setGrocery] = useState<Grocery>();
 
@@ -35,6 +38,12 @@ const UpdateGroceryPage = ({ params }: UpdateGroceryPageProps): JSX.Element => {
         setGrocery(result.data);
     }, [id, setGrocery]);
 
+    const onDelete = useCallback(async () => {
+        await axios.delete(`/api/groceries/${id}`);
+
+        router.push('/groceries');
+    }, [router, id]);
+
     useEffect(() => {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         getGrocery();
@@ -44,6 +53,11 @@ const UpdateGroceryPage = ({ params }: UpdateGroceryPageProps): JSX.Element => {
         <>
             <Header name={`Edit Grocery ${id}`} />
             <Main>
+                <Button
+                    className='ml-auto flex w-fit cursor-pointer rounded-md bg-red-500 p-5 text-white hover:bg-red-300'
+                    onClick={onDelete}
+                    text='Delete'
+                />
                 <div className='mr-auto ml-auto rounded border-2 p-4 md:w-2/3 dark:border-white'>
                     <Form
                         // eslint-disable-next-line @typescript-eslint/no-explicit-any

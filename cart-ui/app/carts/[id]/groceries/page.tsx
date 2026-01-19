@@ -3,6 +3,7 @@ import type { JSX } from 'react';
 
 import axios from 'axios';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { use, useCallback, useEffect, useState } from 'react';
 import { Form } from 'react-final-form';
 
@@ -27,6 +28,8 @@ const UpdateCartGroceriesPage = ({
     params,
 }: UpdateCartPageProps): JSX.Element => {
     const { id: cartId } = use(params);
+
+    const router = useRouter();
 
     const [cartGroceries, setCartGroceries] =
         useState<BulkUpsertRequest<CartGrocery>>(DEFAULT_BULK_REQUEST);
@@ -81,6 +84,31 @@ const UpdateCartGroceriesPage = ({
         [cartGroceries, setCartGroceries, cartId]
     );
 
+    const onDelete = useCallback(async () => {
+        await axios.delete(`/api/carts/${cartId}`);
+
+        router.push('/carts');
+    }, [router, cartId]);
+
+    const onCartGroceryDelete = useCallback(
+        (index: number) => async (): Promise<void> => {
+            const item = cartGroceries.items[index];
+
+            if (item.id) {
+                await axios.delete(`/api/cartGroceries/${cartId}`);
+            }
+
+            const updateCartGroceries: BulkUpsertRequest<CartGrocery> = {
+                items: cartGroceries.items.filter(
+                    (_, checkIndex) => checkIndex != index
+                ),
+            };
+
+            setCartGroceries(updateCartGroceries);
+        },
+        [cartId, cartGroceries, setCartGroceries]
+    );
+
     useEffect(() => {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         getCartGroceries();
@@ -90,12 +118,19 @@ const UpdateCartGroceriesPage = ({
         <>
             <Header name={`Edit Cart ${cartId}`} />
             <Main>
-                <Link
-                    className='ml-auto flex w-fit cursor-pointer rounded-md bg-emerald-500 p-5 text-white hover:bg-emerald-300'
-                    href={`/carts/${cartId}`}
-                >
-                    Edit Cart
-                </Link>
+                <div className='flex'>
+                    <Link
+                        className='ml-auto inline-flex w-fit cursor-pointer rounded-md bg-emerald-500 p-5 text-white hover:bg-emerald-300'
+                        href={`/carts/${cartId}`}
+                    >
+                        Edit Cart
+                    </Link>
+                    <Button
+                        className='ml-5 inline-flex w-fit cursor-pointer rounded-md bg-red-500 p-5 text-white hover:bg-red-300'
+                        onClick={onDelete}
+                        text='Delete'
+                    />
+                </div>
                 <div className='mt-5 mr-auto ml-auto rounded border-2 p-4 md:w-2/3 dark:border-white'>
                     <GrocerySearchField onAddGrocery={onAddGrocery} />
                 </div>
@@ -118,6 +153,11 @@ const UpdateCartGroceriesPage = ({
                                             inputType='number'
                                             label='Quantity'
                                             name={`items[${index}].quantity`}
+                                        />
+                                        <Button
+                                            className='mt-3 ml-auto flex w-fit cursor-pointer rounded-md bg-red-500 p-5 text-white hover:bg-red-300'
+                                            onClick={onCartGroceryDelete(index)}
+                                            text='Delete'
                                         />
                                     </div>
                                 ))}
