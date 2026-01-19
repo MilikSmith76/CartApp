@@ -15,14 +15,50 @@ import { DEFAULT_PAGE_SIZE } from '@/utils';
 class GroceryService {
     private endpoint = `${process.env.API_HOST}/groceries`;
 
+    static apiToUi({
+        description,
+        id,
+        image_url,
+        name,
+        price,
+        purchased,
+    }: GroceryApi): Grocery {
+        return {
+            description,
+            id,
+            imageUrl: image_url,
+            name,
+            price,
+            purchased,
+        };
+    }
+
+    static uiToApi({
+        description,
+        id,
+        imageUrl,
+        name,
+        price,
+        purchased,
+    }: Grocery): GroceryApi {
+        return {
+            description,
+            id,
+            image_url: imageUrl,
+            name,
+            price,
+            purchased,
+        };
+    }
+
     public async create(input: Grocery): Promise<Grocery> {
         const result = await axios.post<
             GroceryApi,
             AxiosResponse<GroceryApi>,
             GroceryApi
-        >(this.endpoint, this.uiToApi(input));
+        >(this.endpoint, GroceryService.uiToApi(input));
 
-        return this.apiToUi(result.data);
+        return GroceryService.apiToUi(result.data);
     }
 
     public async delete(id: number): Promise<SuccessResponse> {
@@ -36,7 +72,7 @@ class GroceryService {
     public async get(id: number): Promise<Grocery> {
         const result = await axios.get<GroceryApi>(`${this.endpoint}/${id}`);
 
-        return this.apiToUi(result.data);
+        return GroceryService.apiToUi(result.data);
     }
 
     public async getPage(
@@ -57,7 +93,7 @@ class GroceryService {
 
         return {
             count: result.data.count,
-            results: result.data.results.map(this.apiToUi),
+            results: result.data.results.map(GroceryService.apiToUi),
         };
     }
 
@@ -66,45 +102,9 @@ class GroceryService {
             GroceryApi,
             AxiosResponse<GroceryApi>,
             GroceryApi
-        >(`${this.endpoint}/${id}`, this.uiToApi(input));
+        >(`${this.endpoint}/${id}`, GroceryService.uiToApi(input));
 
-        return this.apiToUi(result.data);
-    }
-
-    private apiToUi({
-        description,
-        id,
-        image_url,
-        name,
-        price,
-        purchased,
-    }: GroceryApi): Grocery {
-        return {
-            description,
-            id,
-            imageUrl: image_url,
-            name,
-            price,
-            purchased,
-        };
-    }
-
-    private uiToApi({
-        description,
-        id,
-        imageUrl,
-        name,
-        price,
-        purchased,
-    }: Grocery): GroceryApi {
-        return {
-            description,
-            id,
-            image_url: imageUrl,
-            name,
-            price,
-            purchased,
-        };
+        return GroceryService.apiToUi(result.data);
     }
 }
 

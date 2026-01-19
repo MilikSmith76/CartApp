@@ -1,8 +1,12 @@
 export type * from './apiPaginationResponse';
+export type * from './bulkUpsertRequest';
+export type * from './bulkUpsertResponse';
 export type * from './buttonProps';
 export type * from './cart';
 export type * from './cartApi';
 export type * from './cartCardProps';
+export type * from './cartGrocery';
+export type * from './cartGroceryAPi';
 export type * from './grocery';
 export type * from './groceryApi';
 export type * from './groceryCardProps';
