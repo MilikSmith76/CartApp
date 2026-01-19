@@ -5,6 +5,7 @@ import type {
     Cart,
     CartApi,
     PaginationResponse,
+    SuccessResponse,
 } from '@/interfaces';
 
 import { DEFAULT_PAGE_SIZE } from '@/utils';
@@ -14,6 +15,14 @@ class CartService {
 
     public async create(input: Cart): Promise<Cart> {
         const result = await axios.post<CartApi>(this.endpoint, input);
+
+        return result.data;
+    }
+
+    public async delete(id: number): Promise<SuccessResponse> {
+        const result = await axios.delete<SuccessResponse>(
+            `${this.endpoint}/${id}`
+        );
 
         return result.data;
     }
@@ -46,6 +55,15 @@ class CartService {
             count: result.data.count,
             results: result.data.results as Cart[],
         };
+    }
+
+    public async update(id: number, input: Cart): Promise<Cart> {
+        const result = await axios.put<CartApi>(
+            `${this.endpoint}/${id}`,
+            input
+        );
+
+        return result.data;
     }
 }
 
