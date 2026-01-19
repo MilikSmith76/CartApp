@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import { Description, Field, Input, Label } from '@headlessui/react';
 import { JSX } from 'react';
 import { Field as FinalField } from 'react-final-form';

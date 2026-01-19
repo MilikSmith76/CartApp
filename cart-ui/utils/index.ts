@@ -10,10 +10,10 @@ export const getRequestParams = (searchParams: URLSearchParams): any => {
     return params;
 };
 
-export { 
+export {
     BAD_REQUEST,
     DEFAULT_EXTERNAL_IMAGE_HEIGHT,
     DEFAULT_EXTERNAL_IMAGE_WIDTH,
     DEFAULT_PAGE_SIZE,
     FORM_REQUIRED_FEILD_ERROR,
- } from './constants';
+} from './constants';

@@ -32,7 +32,8 @@ const GET = async (request: NextRequest): Promise<NextResponse> => {
 };
 
 const POST = async (request: NextRequest): Promise<NextResponse> => {
-    const { description, imageUrl, name,  price, purchased } = await request.json();
+    const { description, imageUrl, name, price, purchased } =
+        await request.json();
 
     const input: Grocery = {
         description,

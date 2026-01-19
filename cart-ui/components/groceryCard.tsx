@@ -8,7 +8,7 @@ import type { GroceryCardProps } from '@/interfaces';
 import {
     DEFAULT_EXTERNAL_IMAGE_HEIGHT,
     DEFAULT_EXTERNAL_IMAGE_WIDTH,
-} from '@/utils/constants';
+} from '@/utils';
 
 const GroceryCard = ({ grocery }: GroceryCardProps): JSX.Element => {
     return (
@@ -18,7 +18,7 @@ const GroceryCard = ({ grocery }: GroceryCardProps): JSX.Element => {
                 key={grocery.id}
             >
                 <div className='mt-5 text-2xl font-bold'>{grocery.name}</div>
-                <div className='mt-2 flex justify-center h-auto w-full'>
+                <div className='mt-2 flex h-auto w-full justify-center'>
                     <Image
                         alt='Product Image'
                         height={DEFAULT_EXTERNAL_IMAGE_HEIGHT}

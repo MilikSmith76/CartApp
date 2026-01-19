@@ -58,12 +58,12 @@ const GroceriesPage = (): JSX.Element => {
             <Header name='Groceries' />
             <Main>
                 <Link
-                    className='flex ml-auto cursor-pointer w-fit rounded-md bg-emerald-500 p-5 text-white hover:bg-emerald-300'
+                    className='ml-auto flex w-fit cursor-pointer rounded-md bg-emerald-500 p-5 text-white hover:bg-emerald-300'
                     href={'groceries/new'}
                 >
                     Create
                 </Link>
-                <div className='ml-auto mt-5 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3'>
+                <div className='mt-5 ml-auto grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3'>
                     {groceries.map((grocery) => (
                         <GroceryCard grocery={grocery} key={grocery.id} />
                     ))}

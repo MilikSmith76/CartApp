@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import type { JSX } from 'react';
 
 import axios from 'axios';
@@ -27,19 +27,30 @@ const NewGroceryPage = (): JSX.Element => {
         <>
             <Header name='Create New Grocery' />
             <Main>
-                <div className='mr-auto ml-auto rounded border-2 p-4 dark:border-white md:w-2/3'>
+                <div className='mr-auto ml-auto rounded border-2 p-4 md:w-2/3 dark:border-white'>
                     <Form
                         onSubmit={onSubmit}
                         render={({ handleSubmit }) => (
-                           <form onSubmit={handleSubmit}>
-                                <div className='mb-5 text-2xl font-bold'>New Grocery</div>
+                            <form onSubmit={handleSubmit}>
+                                <div className='mb-5 text-2xl font-bold'>
+                                    New Grocery
+                                </div>
                                 <TextFormField label='Name' name='name' />
-                                <TextFormField label='Description' name='description' />
-                                <TextFormField label='Image URL' name='imageUrl' />
+                                <TextFormField
+                                    label='Description'
+                                    name='description'
+                                />
+                                <TextFormField
+                                    label='Image URL'
+                                    name='imageUrl'
+                                />
                                 <TextFormField label='Price' name='price' />
-                                <TextFormField label='Purchased' name='purchased' />
+                                <TextFormField
+                                    label='Purchased'
+                                    name='purchased'
+                                />
                                 <Button text='Submit' type='submit' />
-                           </form> 
+                            </form>
                         )}
                         validate={groceryValidator}
                     />
@@ -47,6 +58,6 @@ const NewGroceryPage = (): JSX.Element => {
             </Main>
         </>
     );
-}
+};
 
 export default NewGroceryPage;
