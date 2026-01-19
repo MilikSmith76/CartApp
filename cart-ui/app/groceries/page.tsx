@@ -9,7 +9,7 @@ import type { Grocery, PaginationResponse } from '@/interfaces';
 import { Button, GroceryCard, Header, Main } from '@/components';
 import { DEFAULT_PAGE_SIZE } from '@/utils';
 
-const Groceries = (): JSX.Element => {
+const GroceriesPage = (): JSX.Element => {
     const [groceries, setgroceries] = useState<Grocery[]>([]);
     const [page, setPage] = useState(0);
     const [total, setTotal] = useState(0);
@@ -68,4 +68,4 @@ const Groceries = (): JSX.Element => {
     );
 };
 
-export default Groceries;
+export default GroceriesPage;

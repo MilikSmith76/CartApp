@@ -9,7 +9,7 @@ import type { Cart, PaginationResponse } from '@/interfaces';
 import { Button, CartCard, Header, Main } from '@/components';
 import { DEFAULT_PAGE_SIZE } from '@/utils';
 
-const Carts = (): JSX.Element => {
+const CartsPage = (): JSX.Element => {
     const [carts, setCarts] = useState<Cart[]>([]);
     const [page, setPage] = useState(0);
     const [total, setTotal] = useState(0);
@@ -65,4 +65,4 @@ const Carts = (): JSX.Element => {
     );
 };
 
-export default Carts;
+export default CartsPage;
