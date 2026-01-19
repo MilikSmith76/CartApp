@@ -1,0 +1,5 @@
+const BAD_REQUEST = 400;
+
+const DEFAULT_PAGE_SIZE = 20;
+
+export { BAD_REQUEST, DEFAULT_PAGE_SIZE };
