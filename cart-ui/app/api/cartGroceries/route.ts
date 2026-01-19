@@ -8,7 +8,16 @@ import { BAD_REQUEST, getRequestParams } from '@/utils';
 const cartGroceryService = new CartGroceryService();
 
 const GET = async (request: NextRequest): Promise<NextResponse> => {
-    const { limit, page } = getRequestParams(request.nextUrl.searchParams);
+    const { cartId, limit, page } = getRequestParams(
+        request.nextUrl.searchParams
+    );
+
+    if (limit && isNaN(+cartId)) {
+        return NextResponse.json(
+            { error: 'Param "cartId" must be a number if provided.' },
+            { status: BAD_REQUEST }
+        );
+    }
 
     if (page && isNaN(+page)) {
         return NextResponse.json(
@@ -24,7 +33,7 @@ const GET = async (request: NextRequest): Promise<NextResponse> => {
         );
     }
 
-    const response = await cartGroceryService.getPage(page, limit);
+    const response = await cartGroceryService.getPage(cartId, page, limit);
 
     return NextResponse.json(response);
 };

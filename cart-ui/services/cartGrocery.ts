@@ -93,6 +93,7 @@ class CartGroceryService {
     }
 
     public async getPage(
+        cartId: number,
         page: number = 0,
         limit: number = DEFAULT_PAGE_SIZE
     ): Promise<PaginationResponse<CartGrocery>> {
@@ -102,6 +103,7 @@ class CartGroceryService {
             this.endpoint,
             {
                 params: {
+                    cart_id: cartId,
                     limit,
                     offset,
                 },
