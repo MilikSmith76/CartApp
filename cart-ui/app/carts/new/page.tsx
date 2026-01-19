@@ -18,7 +18,7 @@ const NewCartPage = (): JSX.Element => {
         async (value: any) => {
             await axios.post('/api/carts', value);
 
-            router.push('/');
+            router.push('/carts');
         },
         [router]
     );

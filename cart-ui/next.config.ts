@@ -12,6 +12,13 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  redirects: () => ([
+    {
+      destination: '/carts',
+      permanent: true,
+      source: '/',
+    }
+  ]),
 };
 
 export default nextConfig;

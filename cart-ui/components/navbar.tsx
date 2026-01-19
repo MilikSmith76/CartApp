@@ -8,7 +8,7 @@ import type { NavbarLink } from '@/interfaces';
 
 const links: NavbarLink[] = [
     {
-        href: '/',
+        href: '/carts',
         name: 'Carts',
     },
     {
