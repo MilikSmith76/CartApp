@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 import { CartGroceryService } from '@/services';
-import { BAD_REQUEST } from '@/utils';
+import { getRequiredIdErrorResponse } from '@/utils';
 
 const cartGroceryService = new CartGroceryService();
 
@@ -14,11 +14,10 @@ const DELETE = async (
 ): Promise<NextResponse> => {
     const { id } = await context.params;
 
-    if (isNaN(+id)) {
-        return NextResponse.json(
-            { error: `${id} is not a valid id` },
-            { status: BAD_REQUEST }
-        );
+    const errorResponse = getRequiredIdErrorResponse(id);
+
+    if (errorResponse) {
+        return errorResponse;
     }
 
     const response = await cartGroceryService.delete(+id);

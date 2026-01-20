@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server';
 import type { Cart } from '@/interfaces';
 
 import { CartService } from '@/services';
-import { BAD_REQUEST } from '@/utils';
+import { getRequiredIdErrorResponse } from '@/utils';
 
 const cartService = new CartService();
 
@@ -16,11 +16,10 @@ const GET = async (
 ): Promise<NextResponse> => {
     const { id } = await context.params;
 
-    if (isNaN(+id)) {
-        return NextResponse.json(
-            { error: `${id} is not a valid id` },
-            { status: BAD_REQUEST }
-        );
+    const errorResponse = getRequiredIdErrorResponse(id);
+
+    if (errorResponse) {
+        return errorResponse;
     }
 
     const response = await cartService.get(+id);
@@ -35,11 +34,10 @@ const PUT = async (
 ): Promise<NextResponse> => {
     const { id } = await context.params;
 
-    if (isNaN(+id)) {
-        return NextResponse.json(
-            { error: `${id} is not a valid id` },
-            { status: BAD_REQUEST }
-        );
+    const errorResponse = getRequiredIdErrorResponse(id);
+
+    if (errorResponse) {
+        return errorResponse;
     }
 
     const { description, name } = await request.json();
@@ -62,11 +60,10 @@ const DELETE = async (
 ): Promise<NextResponse> => {
     const { id } = await context.params;
 
-    if (isNaN(+id)) {
-        return NextResponse.json(
-            { error: `${id} is not a valid id` },
-            { status: BAD_REQUEST }
-        );
+    const errorResponse = getRequiredIdErrorResponse(id);
+
+    if (errorResponse) {
+        return errorResponse;
     }
 
     const response = await cartService.delete(+id);

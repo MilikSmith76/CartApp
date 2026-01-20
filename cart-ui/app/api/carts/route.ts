@@ -5,25 +5,20 @@ import { NextResponse } from 'next/server';
 import type { Cart } from '@/interfaces';
 
 import { CartService } from '@/services';
-import { BAD_REQUEST, getRequestParams } from '@/utils';
+import { getNumberParametersErrorResponse, getRequestParams } from '@/utils';
 
 const cartService = new CartService();
 
 const GET = async (request: NextRequest): Promise<NextResponse> => {
     const { limit, page } = getRequestParams(request.nextUrl.searchParams);
 
-    if (page && isNaN(+page)) {
-        return NextResponse.json(
-            { error: 'Param "page" must be a number if provided.' },
-            { status: BAD_REQUEST }
-        );
-    }
+    const errorResponse = getNumberParametersErrorResponse(
+        ['page', 'limit'],
+        [page, limit]
+    );
 
-    if (limit && isNaN(+limit)) {
-        return NextResponse.json(
-            { error: 'Param "limit" must be a number if provided.' },
-            { status: BAD_REQUEST }
-        );
+    if (errorResponse) {
+        return errorResponse;
     }
 
     const response = await cartService.getPage(page, limit);

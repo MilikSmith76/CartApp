@@ -4,9 +4,7 @@ import type { Grocery } from '@/interfaces';
 
 import { FORM_REQUIRED_FEILD_ERROR } from '@/utils';
 
-const groceryValidator = (
-    value?: Grocery
-): ValidationErrors => {
+const groceryValidator = (value?: Grocery): ValidationErrors => {
     const errors: ValidationErrors = {};
 
     if (!value?.name) {

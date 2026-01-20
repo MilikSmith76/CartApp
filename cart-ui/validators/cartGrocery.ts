@@ -4,9 +4,7 @@ import type { CartGrocery } from '@/interfaces';
 
 import { FORM_REQUIRED_FEILD_ERROR } from '@/utils';
 
-const cartGroceryValidator = (
-    value?: CartGrocery
-): ValidationErrors => {
+const cartGroceryValidator = (value?: CartGrocery): ValidationErrors => {
     const errors: ValidationErrors = {};
 
     if (!value?.quantity) {

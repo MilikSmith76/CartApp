@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server';
 import type { Grocery } from '@/interfaces';
 
 import { GroceryService } from '@/services';
-import { BAD_REQUEST, getRequestParams } from '@/utils';
+import { getNumberParametersErrorResponse, getRequestParams } from '@/utils';
 
 const grocerySerice = new GroceryService();
 
@@ -14,18 +14,13 @@ const GET = async (request: NextRequest): Promise<NextResponse> => {
         request.nextUrl.searchParams
     );
 
-    if (page && isNaN(+page)) {
-        return NextResponse.json(
-            { error: 'Param "page" must be a number if provided.' },
-            { status: BAD_REQUEST }
-        );
-    }
+    const errorResponse = getNumberParametersErrorResponse(
+        ['page', 'limit'],
+        [page, limit]
+    );
 
-    if (limit && isNaN(+limit)) {
-        return NextResponse.json(
-            { error: 'Param "limit" must be a number if provided.' },
-            { status: BAD_REQUEST }
-        );
+    if (errorResponse) {
+        return errorResponse;
     }
 
     const response = await grocerySerice.getPage(page, limit, search);
