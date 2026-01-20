@@ -14,7 +14,7 @@ const GroceryCard = ({ grocery }: GroceryCardProps): JSX.Element => {
     return (
         <Link href={`/groceries/${grocery.id}`}>
             <div
-                className='group col-span-1 rounded-md border-2 bg-white p-5'
+                className='group col-span-1 rounded-md border-2 p-5'
                 key={grocery.id}
             >
                 <div className='mt-5 text-2xl font-bold'>{grocery.name}</div>
