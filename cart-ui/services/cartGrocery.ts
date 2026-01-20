@@ -116,8 +116,6 @@ class CartGroceryService {
             }
         );
 
-        // No further processing required because the Cart representation in
-        // the ui and the api are the same.
         return {
             count: result.data.count,
             results: result.data.results.map(CartGroceryService.apiToUi),

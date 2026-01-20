@@ -9,7 +9,7 @@ const cartGroceriesValidator = (
 ): ValidationErrors => {
     const errors: ValidationErrors = {};
 
-    let wasErrorsFound = false;
+    let wasErrorFound = false;
 
     const items: ValidationErrors[] = [];
 
@@ -18,17 +18,17 @@ const cartGroceriesValidator = (
         const cartGroceryErrors = cartGroceryValidator(cartGrocery as any);
 
         if (
-            !wasErrorsFound &&
+            !wasErrorFound &&
             cartGroceryErrors &&
             Object.keys(cartGroceryErrors).length > 0
         ) {
-            wasErrorsFound = true;
+            wasErrorFound = true;
         }
 
         items.push(cartGroceryErrors);
     });
 
-    if (wasErrorsFound) {
+    if (wasErrorFound) {
         errors.items = items;
     }
 

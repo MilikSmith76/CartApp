@@ -18,9 +18,8 @@ import type {
 
 import { Button, GrocerySearchField, Header, Main } from '@/components';
 import TextFormField from '@/components/textFormField';
+import { DEFAULT_MAX_CART_GROCERIES } from '@/utils';
 import { cartGroceriesValidator } from '@/validators';
-
-const DEFAULT_MAX_CART_GROCERIES = 1000;
 
 const DEFAULT_BULK_REQUEST: BulkUpsertRequest<CartGrocery> = { items: [] };
 
