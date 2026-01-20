@@ -4,13 +4,10 @@ import type { JSX } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { use, useCallback, useEffect, useState } from 'react';
-import { Form } from 'react-final-form';
 
 import type { Grocery, UpdateGroceryPageProps } from '@/interfaces';
 
-import { Button, Header, Main } from '@/components';
-import TextFormField from '@/components/textFormField';
-import { groceryValidator } from '@/validators';
+import { Button, GroceryForm, Header, Main } from '@/components';
 
 const UpdateGroceryPage = ({ params }: UpdateGroceryPageProps): JSX.Element => {
     const { id } = use(params);
@@ -59,33 +56,10 @@ const UpdateGroceryPage = ({ params }: UpdateGroceryPageProps): JSX.Element => {
                     text='Delete'
                 />
                 <div className='mr-auto ml-auto rounded border-2 p-4 md:w-2/3 dark:border-white'>
-                    <Form
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        initialValues={grocery as any}
+                    <GroceryForm
+                        formHeader='Edit Grocery'
+                        grocery={grocery}
                         onSubmit={onSubmit}
-                        render={({ handleSubmit }) => (
-                            <form onSubmit={handleSubmit}>
-                                <div className='mb-5 text-2xl font-bold'>
-                                    Edit Grocery
-                                </div>
-                                <TextFormField label='Name' name='name' />
-                                <TextFormField
-                                    label='Description'
-                                    name='description'
-                                />
-                                <TextFormField
-                                    label='Image URL'
-                                    name='imageUrl'
-                                />
-                                <TextFormField label='Price' name='price' />
-                                <TextFormField
-                                    label='Purchased'
-                                    name='purchased'
-                                />
-                                <Button text='Submit' type='submit' />
-                            </form>
-                        )}
-                        validate={groceryValidator}
                     />
                 </div>
             </Main>

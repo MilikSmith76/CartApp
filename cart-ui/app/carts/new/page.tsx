@@ -4,11 +4,8 @@ import type { JSX } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
-import { Form } from 'react-final-form';
 
-import { Button, Header, Main } from '@/components';
-import TextFormField from '@/components/textFormField';
-import { cartValidator } from '@/validators';
+import { CartForm, Header, Main } from '@/components';
 
 const NewCartPage = (): JSX.Element => {
     const router = useRouter();
@@ -28,23 +25,7 @@ const NewCartPage = (): JSX.Element => {
             <Header name='Create New Cart' />
             <Main>
                 <div className='mr-auto ml-auto rounded border-2 p-4 md:w-2/3 dark:border-white'>
-                    <Form
-                        onSubmit={onSubmit}
-                        render={({ handleSubmit }) => (
-                            <form onSubmit={handleSubmit}>
-                                <div className='mb-5 text-2xl font-bold'>
-                                    New Cart
-                                </div>
-                                <TextFormField label='Name' name='name' />
-                                <TextFormField
-                                    label='Description'
-                                    name='description'
-                                />
-                                <Button text='Submit' type='submit' />
-                            </form>
-                        )}
-                        validate={cartValidator}
-                    />
+                    <CartForm formHeader='New Cart' onSubmit={onSubmit} />
                 </div>
             </Main>
         </>

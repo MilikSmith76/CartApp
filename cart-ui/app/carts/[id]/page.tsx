@@ -2,15 +2,11 @@
 import type { JSX } from 'react';
 
 import axios from 'axios';
-import Link from 'next/link';
 import { use, useCallback, useEffect, useState } from 'react';
-import { Form } from 'react-final-form';
 
 import type { Cart, UpdateCartPageProps } from '@/interfaces';
 
-import { Button, Header, Main } from '@/components';
-import TextFormField from '@/components/textFormField';
-import { cartValidator } from '@/validators';
+import { CartForm, Header, LinkButton, Main } from '@/components';
 
 const UpdateCartPage = ({ params }: UpdateCartPageProps): JSX.Element => {
     const { id } = use(params);
@@ -42,31 +38,15 @@ const UpdateCartPage = ({ params }: UpdateCartPageProps): JSX.Element => {
         <>
             <Header name={`Edit Cart ${id}`} />
             <Main>
-                <Link
-                    className='ml-auto flex w-fit cursor-pointer rounded-md bg-emerald-500 p-5 text-white hover:bg-emerald-300'
+                <LinkButton
                     href={`/carts/${id}/groceries`}
-                >
-                    Edit Cart Groceries
-                </Link>
+                    text='Edit Cart Groceries'
+                />
                 <div className='mt-5 mr-auto ml-auto rounded border-2 p-4 md:w-2/3 dark:border-white'>
-                    <Form
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        initialValues={cart as any}
+                    <CartForm
+                        cart={cart}
+                        formHeader='Edit Cart'
                         onSubmit={onSubmit}
-                        render={({ handleSubmit }) => (
-                            <form onSubmit={handleSubmit}>
-                                <div className='mb-5 text-2xl font-bold'>
-                                    Edit Cart
-                                </div>
-                                <TextFormField label='Name' name='name' />
-                                <TextFormField
-                                    label='Description'
-                                    name='description'
-                                />
-                                <Button text='Submit' type='submit' />
-                            </form>
-                        )}
-                        validate={cartValidator}
                     />
                 </div>
             </Main>

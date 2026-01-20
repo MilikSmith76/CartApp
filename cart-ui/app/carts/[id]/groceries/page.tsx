@@ -2,10 +2,8 @@
 import type { JSX } from 'react';
 
 import axios from 'axios';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { use, useCallback, useEffect, useState } from 'react';
-import { Form } from 'react-final-form';
 
 import type {
     BulkUpsertRequest,
@@ -16,10 +14,15 @@ import type {
     UpdateCartPageProps,
 } from '@/interfaces';
 
-import { Button, GrocerySearchField, Header, Main } from '@/components';
-import TextFormField from '@/components/textFormField';
+import {
+    Button,
+    CartGroceriesForm,
+    GrocerySearchField,
+    Header,
+    LinkButton,
+    Main,
+} from '@/components';
 import { DEFAULT_MAX_CART_GROCERIES } from '@/utils';
-import { cartGroceriesValidator } from '@/validators';
 
 const DEFAULT_BULK_REQUEST: BulkUpsertRequest<CartGrocery> = { items: [] };
 
@@ -30,7 +33,7 @@ const UpdateCartGroceriesPage = ({
 
     const router = useRouter();
 
-    const [cartGroceries, setCartGroceries] =
+    const [bulkUpsertRequest, setBulkUpsertRequest] =
         useState<BulkUpsertRequest<CartGrocery>>(DEFAULT_BULK_REQUEST);
 
     const onSubmit = useCallback(
@@ -42,9 +45,9 @@ const UpdateCartGroceriesPage = ({
             );
 
             // No convertion for the data because BulkUpsertRequest and BulkUpsertResponse are the same
-            setCartGroceries(result.data);
+            setBulkUpsertRequest(result.data);
         },
-        [setCartGroceries]
+        [setBulkUpsertRequest]
     );
 
     const getCartGroceries = useCallback(async () => {
@@ -58,16 +61,16 @@ const UpdateCartGroceriesPage = ({
             }
         );
 
-        setCartGroceries({
+        setBulkUpsertRequest({
             items: result.data.results,
         });
-    }, [cartId, setCartGroceries]);
+    }, [cartId, setBulkUpsertRequest]);
 
     const onAddGrocery = useCallback(
         (grocery: Grocery) => {
             const updateCartGroceries: BulkUpsertRequest<CartGrocery> = {
                 items: [
-                    ...cartGroceries.items,
+                    ...bulkUpsertRequest.items,
                     {
                         cartId: +cartId,
                         grocery: grocery,
@@ -78,9 +81,9 @@ const UpdateCartGroceriesPage = ({
                 ],
             };
 
-            setCartGroceries(updateCartGroceries);
+            setBulkUpsertRequest(updateCartGroceries);
         },
-        [cartGroceries, setCartGroceries, cartId]
+        [bulkUpsertRequest, setBulkUpsertRequest, cartId]
     );
 
     const onDelete = useCallback(async () => {
@@ -91,21 +94,21 @@ const UpdateCartGroceriesPage = ({
 
     const onCartGroceryDelete = useCallback(
         (index: number) => async (): Promise<void> => {
-            const item = cartGroceries.items[index];
+            const item = bulkUpsertRequest.items[index];
 
             if (item.id) {
                 await axios.delete(`/api/cartGroceries/${cartId}`);
             }
 
             const updateCartGroceries: BulkUpsertRequest<CartGrocery> = {
-                items: cartGroceries.items.filter(
+                items: bulkUpsertRequest.items.filter(
                     (_, checkIndex) => checkIndex != index
                 ),
             };
 
-            setCartGroceries(updateCartGroceries);
+            setBulkUpsertRequest(updateCartGroceries);
         },
-        [cartId, cartGroceries, setCartGroceries]
+        [cartId, bulkUpsertRequest, setBulkUpsertRequest]
     );
 
     useEffect(() => {
@@ -118,12 +121,11 @@ const UpdateCartGroceriesPage = ({
             <Header name={`Edit Cart ${cartId}`} />
             <Main>
                 <div className='flex'>
-                    <Link
+                    <LinkButton
                         className='ml-auto inline-flex w-fit cursor-pointer rounded-md bg-emerald-500 p-5 text-white hover:bg-emerald-300'
                         href={`/carts/${cartId}`}
-                    >
-                        Edit Cart
-                    </Link>
+                        text='Edit Cart'
+                    />
                     <Button
                         className='ml-5 inline-flex w-fit cursor-pointer rounded-md bg-red-500 p-5 text-white hover:bg-red-300'
                         onClick={onDelete}
@@ -134,36 +136,11 @@ const UpdateCartGroceriesPage = ({
                     <GrocerySearchField onAddGrocery={onAddGrocery} />
                 </div>
                 <div className='mt-5 mr-auto ml-auto rounded border-2 p-4 md:w-2/3 dark:border-white'>
-                    <Form
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        initialValues={cartGroceries as any}
+                    <CartGroceriesForm
+                        bulkUpsertRequest={bulkUpsertRequest}
+                        formHeader='Edit Cart Groceries'
+                        onItemDelete={onCartGroceryDelete}
                         onSubmit={onSubmit}
-                        render={({ handleSubmit }) => (
-                            <form onSubmit={handleSubmit}>
-                                <div className='mb-5 text-2xl font-bold'>
-                                    Edit Cart Groceries
-                                </div>
-                                {cartGroceries.items.map((item, index) => (
-                                    <div key={index}>
-                                        <div className='mt-5 text-2xl font-bold'>
-                                            {item.grocery?.name}
-                                        </div>
-                                        <TextFormField
-                                            inputType='number'
-                                            label='Quantity'
-                                            name={`items[${index}].quantity`}
-                                        />
-                                        <Button
-                                            className='mt-3 ml-auto flex w-fit cursor-pointer rounded-md bg-red-500 p-5 text-white hover:bg-red-300'
-                                            onClick={onCartGroceryDelete(index)}
-                                            text='Delete'
-                                        />
-                                    </div>
-                                ))}
-                                <Button text='Submit' type='submit' />
-                            </form>
-                        )}
-                        validate={cartGroceriesValidator}
                     />
                 </div>
             </Main>
