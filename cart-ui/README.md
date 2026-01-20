@@ -1,36 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Cart UI
 
-## Getting Started
+This Next.JS application is a frontend UI used for adding groceries to Carts. This UI can also retrieve, create, update, and delete both groceries and carts.
 
-First, run the development server:
+## URL
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+When this application is live it can be seen [here](http://localhost:3000/).
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Local Dev Setup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+* Copy the contents of `.example-env` to `.env`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+* Update the values in `.env` to better match your needs.
 
-## Learn More
+** (Note): ** This can be ignored if the Docker Compose environment is being used.
 
-To learn more about Next.js, take a look at the following resources:
+## How To Run
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+* Run `npm install` to install all dependencies.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+* Run `npm run build` to build the project.
 
-## Deploy on Vercel
+  * If any changes are made after building, this command must be reused to have changes reflected in a production run.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+* Run `npm run start` to run the project in a production capacity.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This application can be run in a development capacity using `npm run dev`. Using this command skips the need to build the project and actively displays changes on saving of files.
+
+** (Note): ** Run `npm run dev` for development runs of the application. This command automatically pulls in changes so they can be rendered in the UI.
+
+** (Note): ** This project was built using Node version 22.22.0 and NPM version 10.9.3.
+
+## Environment Variables
+
+* `API_HOST`: The host for the Cart API. The Default should be `http://localhost:8000/api` (if a copied version of `.example-env` is used).
+
+## How to lint and format
+
+This application supports linting and code formating by ESlint, Prettier, and Perfectionist.
+
+### How to lint
+
+* Run `npm run lint`.
+
+### How to automatically fix lint errors
+
+* Run `npm run fix`.
+
+### How to check for code formating errors
+
+* Run `npm run prettier`.
+
+### How to format code
+
+* Run `npm run prettify`.
+
+### How to automatically fix lint errors and format code
+
+* Run `npm run format`.
+
+## Testing
+
+This application supports Jest for Unit testing and Cypress for E2E and Component testing.
+
+### How to run Unit tests
+
+* Run `npm run test`.
+
+### How to run E2E tests
+
+* Run `npm run e2e`.
+
+** (Note): ** `npm run e2e:headless` can be used for running the tests without the GUI.
+
+### How to Component tests
+
+* Run `npm run component`.
+
+** (Note): ** `npm run component:headless` can be used for running the tests without the GUI.

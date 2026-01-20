@@ -5,7 +5,7 @@ services:
         dockerfile: Dockerfile
     container_name: cart_api
     environment:
-      DJANGO_DEBUG: "true"
+      DJANGO_DEBUG: "false"
       DJANGO_MANAGED_TABLES: "true"
       DJANGO_ALLOWED_HOST: "*"
     ports:
