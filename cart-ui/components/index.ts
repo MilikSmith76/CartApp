@@ -7,6 +7,7 @@ export { default as GroceryForm } from './groceryForm';
 export { default as GrocerySearchField } from './grocerySearchField';
 export { default as Header } from './header';
 export { default as LinkButton } from './linkButton';
+export { default as Loading } from './loading';
 export { default as Main } from './main';
 export { default as Navbar } from './navbar';
 export { default as TextFormFieldProps } from './textFormField';
