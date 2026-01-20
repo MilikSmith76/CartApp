@@ -18,8 +18,7 @@ const CartGroceriesForm = ({
 }: CartGroceriesFormProps): JSX.Element => {
     return (
         <Form
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            initialValues={bulkUpsertRequest as any}
+            initialValues={bulkUpsertRequest}
             onSubmit={onSubmit}
             render={({ handleSubmit }) => (
                 <form onSubmit={handleSubmit}>

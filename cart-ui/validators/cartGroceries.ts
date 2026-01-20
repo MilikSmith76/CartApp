@@ -5,7 +5,7 @@ import type { BulkUpsertRequest, CartGrocery } from '@/interfaces';
 import cartGroceryValidator from './cartGrocery';
 
 const cartGroceriesValidator = (
-    value: BulkUpsertRequest<CartGrocery>
+    value?: BulkUpsertRequest<CartGrocery>
 ): ValidationErrors => {
     const errors: ValidationErrors = {};
 
@@ -13,9 +13,8 @@ const cartGroceriesValidator = (
 
     const items: ValidationErrors[] = [];
 
-    value.items.forEach((cartGrocery) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const cartGroceryErrors = cartGroceryValidator(cartGrocery as any);
+    value?.items?.forEach((cartGrocery) => {
+        const cartGroceryErrors = cartGroceryValidator(cartGrocery);
 
         if (
             !wasErrorFound &&

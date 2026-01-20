@@ -17,8 +17,7 @@ const CartForm = ({
 }: CartFormProps): JSX.Element => {
     return (
         <Form
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            initialValues={cart as any}
+            initialValues={cart}
             onSubmit={onSubmit}
             render={({ handleSubmit }) => (
                 <form onSubmit={handleSubmit}>

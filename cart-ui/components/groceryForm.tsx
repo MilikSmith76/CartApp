@@ -17,8 +17,7 @@ const GroceryForm = ({
 }: GroceryFormProps): JSX.Element => {
     return (
         <Form
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            initialValues={grocery as any}
+            initialValues={grocery}
             onSubmit={onSubmit}
             render={({ handleSubmit }) => (
                 <form onSubmit={handleSubmit}>

@@ -4,10 +4,10 @@ import type { Cart } from '@/interfaces';
 
 import { FORM_REQUIRED_FEILD_ERROR } from '@/utils';
 
-const cartValidator = (value: Record<keyof Cart, string>): ValidationErrors => {
+const cartValidator = (value?: Cart): ValidationErrors => {
     const errors: ValidationErrors = {};
 
-    if (!value.name) {
+    if (!value?.name) {
         errors.name = FORM_REQUIRED_FEILD_ERROR;
     }
 

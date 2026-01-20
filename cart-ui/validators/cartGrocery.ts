@@ -5,11 +5,11 @@ import type { CartGrocery } from '@/interfaces';
 import { FORM_REQUIRED_FEILD_ERROR } from '@/utils';
 
 const cartGroceryValidator = (
-    value: Record<keyof CartGrocery, string>
+    value?: CartGrocery
 ): ValidationErrors => {
     const errors: ValidationErrors = {};
 
-    if (!value.quantity) {
+    if (!value?.quantity) {
         errors.quantity = FORM_REQUIRED_FEILD_ERROR;
     }
 
