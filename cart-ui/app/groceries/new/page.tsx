@@ -1,32 +1,57 @@
 'use client';
 import type { JSX } from 'react';
 
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 
-import { CardContainer, GroceryForm, Header, Main } from '@/components';
+import {
+    CardContainer,
+    ErrorAlert,
+    GroceryForm,
+    Header,
+    Loading,
+    Main,
+} from '@/components';
+import { useGrocery } from '@/hooks';
 
 const NewGroceryPage = (): JSX.Element => {
+    const { clearErrorMessage, createGrocery, errorMessage, isLoading } =
+        useGrocery();
+
     const router = useRouter();
 
     const onSubmit = useCallback(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         async (value: any) => {
-            await axios.post('/api/groceries', value);
+            const success = await createGrocery(value);
 
-            router.push('/groceries');
+            if (success) {
+                router.push('/groceries');
+            }
         },
-        [router]
+        [router, createGrocery]
     );
 
     return (
         <>
             <Header name='Create New Grocery' />
             <Main>
-                <CardContainer>
-                    <GroceryForm formHeader='New Grocery' onSubmit={onSubmit} />
-                </CardContainer>
+                {isLoading && <Loading />}
+
+                {!isLoading && (
+                    <>
+                        <ErrorAlert
+                            errorMessage={errorMessage}
+                            onClear={clearErrorMessage}
+                        />
+                        <CardContainer classExtension='mt-5'>
+                            <GroceryForm
+                                formHeader='New Grocery'
+                                onSubmit={onSubmit}
+                            />
+                        </CardContainer>
+                    </>
+                )}
             </Main>
         </>
     );

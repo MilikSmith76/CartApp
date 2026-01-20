@@ -3,6 +3,7 @@ export { default as CardContainer } from './cardContainer';
 export { default as CartCard } from './cartCard';
 export { default as CartForm } from './cartForm';
 export { default as CartGroceriesForm } from './cartGroceriesForm';
+export { default as ErrorAlert } from './errorAlert';
 export { default as GroceryCard } from './groceryCard';
 export { default as GroceryForm } from './groceryForm';
 export { default as GrocerySearchField } from './grocerySearchField';

@@ -10,6 +10,7 @@ export type * from './cartFormProps';
 export type * from './cartGroceriesFormProps';
 export type * from './cartGrocery';
 export type * from './cartGroceryAPi';
+export type * from './errorAlertProps';
 export type * from './grocery';
 export type * from './groceryApi';
 export type * from './groceryCardProps';
