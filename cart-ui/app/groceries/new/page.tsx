@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 
-import { GroceryForm, Header, Main } from '@/components';
+import { CardContainer, GroceryForm, Header, Main } from '@/components';
 
 const NewGroceryPage = (): JSX.Element => {
     const router = useRouter();
@@ -24,9 +24,9 @@ const NewGroceryPage = (): JSX.Element => {
         <>
             <Header name='Create New Grocery' />
             <Main>
-                <div className='mr-auto ml-auto rounded border-2 p-4 md:w-2/3 dark:border-white'>
+                <CardContainer>
                     <GroceryForm formHeader='New Grocery' onSubmit={onSubmit} />
-                </div>
+                </CardContainer>
             </Main>
         </>
     );

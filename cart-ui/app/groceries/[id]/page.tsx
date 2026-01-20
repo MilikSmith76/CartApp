@@ -7,7 +7,7 @@ import { use, useCallback, useEffect, useState } from 'react';
 
 import type { Grocery, UpdateGroceryPageProps } from '@/interfaces';
 
-import { Button, GroceryForm, Header, Main } from '@/components';
+import { Button, CardContainer, GroceryForm, Header, Main } from '@/components';
 
 const UpdateGroceryPage = ({ params }: UpdateGroceryPageProps): JSX.Element => {
     const { id } = use(params);
@@ -55,13 +55,13 @@ const UpdateGroceryPage = ({ params }: UpdateGroceryPageProps): JSX.Element => {
                     onClick={onDelete}
                     text='Delete'
                 />
-                <div className='mr-auto ml-auto rounded border-2 p-4 md:w-2/3 dark:border-white'>
+                <CardContainer classExtension='mt-5'>
                     <GroceryForm
                         formHeader='Edit Grocery'
                         grocery={grocery}
                         onSubmit={onSubmit}
                     />
-                </div>
+                </CardContainer>
             </Main>
         </>
     );

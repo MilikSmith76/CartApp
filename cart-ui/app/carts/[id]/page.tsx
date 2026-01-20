@@ -6,7 +6,13 @@ import { use, useCallback, useEffect, useState } from 'react';
 
 import type { Cart, UpdateCartPageProps } from '@/interfaces';
 
-import { CartForm, Header, LinkButton, Main } from '@/components';
+import {
+    CardContainer,
+    CartForm,
+    Header,
+    LinkButton,
+    Main,
+} from '@/components';
 
 const UpdateCartPage = ({ params }: UpdateCartPageProps): JSX.Element => {
     const { id } = use(params);
@@ -42,13 +48,13 @@ const UpdateCartPage = ({ params }: UpdateCartPageProps): JSX.Element => {
                     href={`/carts/${id}/groceries`}
                     text='Edit Cart Groceries'
                 />
-                <div className='mt-5 mr-auto ml-auto rounded border-2 p-4 md:w-2/3 dark:border-white'>
+                <CardContainer classExtension='mt-5'>
                     <CartForm
                         cart={cart}
                         formHeader='Edit Cart'
                         onSubmit={onSubmit}
                     />
-                </div>
+                </CardContainer>
             </Main>
         </>
     );

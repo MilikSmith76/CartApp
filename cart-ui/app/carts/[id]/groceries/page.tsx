@@ -16,6 +16,7 @@ import type {
 
 import {
     Button,
+    CardContainer,
     CartGroceriesForm,
     GrocerySearchField,
     Header,
@@ -132,17 +133,17 @@ const UpdateCartGroceriesPage = ({
                         text='Delete'
                     />
                 </div>
-                <div className='mt-5 mr-auto ml-auto rounded border-2 p-4 md:w-2/3 dark:border-white'>
+                <CardContainer classExtension='mt-5'>
                     <GrocerySearchField onAddGrocery={onAddGrocery} />
-                </div>
-                <div className='mt-5 mr-auto ml-auto rounded border-2 p-4 md:w-2/3 dark:border-white'>
+                </CardContainer>
+                <CardContainer classExtension='mt-5'>
                     <CartGroceriesForm
                         bulkUpsertRequest={bulkUpsertRequest}
                         formHeader='Edit Cart Groceries'
                         onItemDelete={onCartGroceryDelete}
                         onSubmit={onSubmit}
                     />
-                </div>
+                </CardContainer>
             </Main>
         </>
     );

@@ -2,6 +2,7 @@ export type * from './apiPaginationResponse';
 export type * from './bulkUpsertRequest';
 export type * from './bulkUpsertResponse';
 export type * from './buttonProps';
+export type * from './cardContainerProps';
 export type * from './cart';
 export type * from './cartApi';
 export type * from './cartCardProps';
