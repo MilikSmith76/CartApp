@@ -12,7 +12,12 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 
-from utils.constants import APP_DEBUG, DEFAULT_PAGE_SIZE, DEFAULT_TIMEOUT
+from utils.constants import (
+    APP_DEBUG,
+    DEFAULT_PAGE_SIZE,
+    DEFAULT_TIMEOUT,
+    DJANGO_ALLOWED_HOST,
+)
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -28,7 +33,7 @@ SECRET_KEY = 'django-insecure-!$_+#9(k%ik1dxt@f1ny2etuy5yke2bz-ts!_*rsr536#i#mjs
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = APP_DEBUG
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [DJANGO_ALLOWED_HOST]
 
 
 # Application definition

@@ -1,0 +1,23 @@
+services:
+  cart-api:
+    build:
+        context: cart-api
+        dockerfile: Dockerfile
+    container_name: cart_api
+    environment:
+      DJANGO_DEBUG: "true"
+      DJANGO_MANAGED_TABLES: "true"
+      DJANGO_ALLOWED_HOST: "*"
+    ports:
+      - "8000:8000"
+  cart-ui:
+    build:
+      context: cart-ui
+      dockerfile: Dockerfile
+    container_name: cart_ui
+    environment:
+      API_HOST: "http://cart-api:8000/api"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - cart-api

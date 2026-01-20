@@ -18,7 +18,7 @@ const NewGroceryPage = (): JSX.Element => {
         async (value: any) => {
             await axios.post('/api/groceries', value);
 
-            router.push('/grocies');
+            router.push('/groceries');
         },
         [router]
     );
