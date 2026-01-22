@@ -7,7 +7,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { Cart, PaginationResponse } from '@/interfaces';
 
 import { Button, CartCard, Header, LinkButton, Main } from '@/components';
-import { DEFAULT_PAGE_SIZE } from '@/utils';
+import { DEFAULT_PAGE_SIZE, ROUTES } from '@/utils';
 
 const CartsPage = (): JSX.Element => {
     const [carts, setCarts] = useState<Cart[]>([]);
@@ -53,7 +53,7 @@ const CartsPage = (): JSX.Element => {
         <>
             <Header name='Carts' />
             <Main>
-                <LinkButton href='carts/new' text='Create' />
+                <LinkButton href={`${ROUTES.carts}/new`} text='Create' />
                 <div className='mt-5 ml-auto grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3'>
                     {carts.map((cart) => (
                         <CartCard cart={cart} key={cart.id} />

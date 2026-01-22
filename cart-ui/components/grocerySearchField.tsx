@@ -16,6 +16,8 @@ import type {
     PaginationResponse,
 } from '@/interfaces';
 
+import { ROUTES } from '@/utils';
+
 import Button from './button';
 
 const GrocerySearchField = ({
@@ -32,7 +34,7 @@ const GrocerySearchField = ({
         }
 
         const result = await axios.get<PaginationResponse<Grocery>>(
-            '/api/groceries',
+            ROUTES.apiGroceries,
             {
                 params: {
                     search: query,

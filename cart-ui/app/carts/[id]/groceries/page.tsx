@@ -23,7 +23,7 @@ import {
     LinkButton,
     Main,
 } from '@/components';
-import { DEFAULT_MAX_CART_GROCERIES } from '@/utils';
+import { DEFAULT_MAX_CART_GROCERIES, ROUTES } from '@/utils';
 
 const DEFAULT_BULK_REQUEST: BulkUpsertRequest<CartGrocery> = { items: [] };
 
@@ -41,7 +41,7 @@ const UpdateCartGroceriesPage = ({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         async (value: any) => {
             const result = await axios.put<BulkUpsertResponse<CartGrocery>>(
-                '/api/cartGroceries',
+                ROUTES.apiCartGroceries,
                 value
             );
 
@@ -53,7 +53,7 @@ const UpdateCartGroceriesPage = ({
 
     const getCartGroceries = useCallback(async () => {
         const result = await axios.get<PaginationResponse<CartGrocery>>(
-            '/api/cartGroceries',
+            ROUTES.apiCartGroceries,
             {
                 params: {
                     cartId,
@@ -88,9 +88,9 @@ const UpdateCartGroceriesPage = ({
     );
 
     const onDelete = useCallback(async () => {
-        await axios.delete(`/api/carts/${cartId}`);
+        await axios.delete(`${ROUTES.apiCarts}/${cartId}`);
 
-        router.push('/carts');
+        router.push(ROUTES.carts);
     }, [router, cartId]);
 
     const onCartGroceryDelete = useCallback(
@@ -98,7 +98,7 @@ const UpdateCartGroceriesPage = ({
             const item = bulkUpsertRequest.items[index];
 
             if (item.id) {
-                await axios.delete(`/api/cartGroceries/${cartId}`);
+                await axios.delete(`${ROUTES.apiCartGroceries}/${cartId}`);
             }
 
             const updateCartGroceries: BulkUpsertRequest<CartGrocery> = {
@@ -124,7 +124,7 @@ const UpdateCartGroceriesPage = ({
                 <div className='flex'>
                     <LinkButton
                         className='ml-auto inline-flex w-fit cursor-pointer rounded-md bg-emerald-500 p-5 text-white hover:bg-emerald-300'
-                        href={`/carts/${cartId}`}
+                        href={`${ROUTES.carts}/${cartId}`}
                         text='Edit Cart'
                     />
                     <Button

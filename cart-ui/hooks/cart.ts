@@ -1,9 +1,10 @@
 'use client';
-
 import axios from 'axios';
 import { useCallback, useState } from 'react';
 
 import type { Cart, UseCartOutput } from '@/interfaces';
+
+import { ROUTES } from '@/utils';
 
 const useCart = (): UseCartOutput => {
     const [cart, setCart] = useState<Cart>();
@@ -19,7 +20,9 @@ const useCart = (): UseCartOutput => {
             setIsLoading(true);
 
             try {
-                const result = await axios.get<Cart>(`/api/carts/${id}`);
+                const result = await axios.get<Cart>(
+                    `${ROUTES.apiCarts}/${id}`
+                );
 
                 setCart(result.data);
             } catch {
@@ -44,7 +47,7 @@ const useCart = (): UseCartOutput => {
             setIsLoading(true);
 
             try {
-                const result = await axios.post<Cart>('/api/carts', value);
+                const result = await axios.post<Cart>(ROUTES.apiCarts, value);
 
                 setCart(result.data);
             } catch {
@@ -74,7 +77,7 @@ const useCart = (): UseCartOutput => {
 
             try {
                 const result = await axios.put<Cart>(
-                    `/api/carts/${cart?.id}`,
+                    `${ROUTES.apiCarts}/${cart?.id}`,
                     value
                 );
 
@@ -104,7 +107,7 @@ const useCart = (): UseCartOutput => {
         setIsLoading(true);
 
         try {
-            await axios.delete(`/api/carts/${cart?.id}`);
+            await axios.delete(`${ROUTES.apiCarts}/${cart?.id}`);
 
             setCart(undefined);
         } catch {

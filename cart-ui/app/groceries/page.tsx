@@ -7,7 +7,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { Grocery, PaginationResponse } from '@/interfaces';
 
 import { Button, GroceryCard, Header, LinkButton, Main } from '@/components';
-import { DEFAULT_PAGE_SIZE } from '@/utils';
+import { DEFAULT_PAGE_SIZE, ROUTES } from '@/utils';
 
 const GroceriesPage = (): JSX.Element => {
     const [groceries, setgroceries] = useState<Grocery[]>([]);
@@ -56,7 +56,7 @@ const GroceriesPage = (): JSX.Element => {
         <>
             <Header name='Groceries' />
             <Main>
-                <LinkButton href='groceries/new' text='Create' />
+                <LinkButton href={`${ROUTES.groceries}/new`} text='Create' />
                 <div className='mt-5 ml-auto grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3'>
                     {groceries.map((grocery) => (
                         <GroceryCard grocery={grocery} key={grocery.id} />

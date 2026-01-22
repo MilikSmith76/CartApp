@@ -10,6 +10,14 @@ const DEFAULT_MAX_CART_GROCERIES = 1000;
 
 const FORM_REQUIRED_FEILD_ERROR = 'Field required';
 
+const ROUTES = {
+    apiCartGroceries: '/api/cartGroceries',
+    apiCarts: '/api/carts',
+    apiGroceries: '/api/groceries',
+    carts: '/carts',
+    groceries: '/groceries',
+};
+
 export {
     BAD_REQUEST,
     DEFAULT_EXTERNAL_IMAGE_HEIGHT,
@@ -17,4 +25,5 @@ export {
     DEFAULT_MAX_CART_GROCERIES,
     DEFAULT_PAGE_SIZE,
     FORM_REQUIRED_FEILD_ERROR,
+    ROUTES,
 };

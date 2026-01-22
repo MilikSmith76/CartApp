@@ -4,6 +4,8 @@ import { useCallback, useState } from 'react';
 
 import type { Grocery, UseGroceryOutput } from '@/interfaces';
 
+import { ROUTES } from '@/utils';
+
 const useGrocery = (): UseGroceryOutput => {
     const [grocery, setGrocery] = useState<Grocery>();
     const [isLoading, setIsLoading] = useState(false);
@@ -18,7 +20,9 @@ const useGrocery = (): UseGroceryOutput => {
             setIsLoading(true);
 
             try {
-                const result = await axios.get<Grocery>(`/api/groceries/${id}`);
+                const result = await axios.get<Grocery>(
+                    `${ROUTES.apiGroceries}/${id}`
+                );
 
                 setGrocery(result.data);
             } catch {
@@ -44,7 +48,7 @@ const useGrocery = (): UseGroceryOutput => {
 
             try {
                 const result = await axios.post<Grocery>(
-                    '/api/groceries',
+                    ROUTES.apiGroceries,
                     value
                 );
 
@@ -76,7 +80,7 @@ const useGrocery = (): UseGroceryOutput => {
 
             try {
                 const result = await axios.put<Grocery>(
-                    `/api/groceries/${grocery?.id}`,
+                    `${ROUTES.apiGroceries}/${grocery?.id}`,
                     value
                 );
 
@@ -106,7 +110,7 @@ const useGrocery = (): UseGroceryOutput => {
         setIsLoading(true);
 
         try {
-            await axios.delete(`/api/groceries/${grocery?.id}`);
+            await axios.delete(`${ROUTES.apiGroceries}/${grocery?.id}`);
 
             setGrocery(undefined);
         } catch {

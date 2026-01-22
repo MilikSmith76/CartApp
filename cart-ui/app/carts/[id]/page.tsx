@@ -15,6 +15,7 @@ import {
     Main,
 } from '@/components';
 import { useCart } from '@/hooks';
+import { ROUTES } from '@/utils';
 
 const UpdateCartPage = ({ params }: UpdateCartPageProps): JSX.Element => {
     const { id } = use(params);
@@ -47,7 +48,7 @@ const UpdateCartPage = ({ params }: UpdateCartPageProps): JSX.Element => {
                 {!isLoading && cart && (
                     <>
                         <LinkButton
-                            href={`/carts/${id}/groceries`}
+                            href={`${ROUTES.carts}/${id}/groceries`}
                             text='Edit Cart Groceries'
                         />
                         <ErrorAlert

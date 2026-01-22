@@ -15,6 +15,7 @@ import {
     Main,
 } from '@/components';
 import { useGrocery } from '@/hooks';
+import { ROUTES } from '@/utils';
 
 const NewGroceryPage = (): JSX.Element => {
     const { clearErrorMessage, createGrocery, errorMessage, isLoading } =
@@ -27,7 +28,7 @@ const NewGroceryPage = (): JSX.Element => {
             const success = await createGrocery(value);
 
             if (success) {
-                router.push('/groceries');
+                router.push(ROUTES.groceries);
             }
         },
         [router, createGrocery]

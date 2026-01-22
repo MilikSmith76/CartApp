@@ -6,13 +6,15 @@ import Link from 'next/link';
 
 import type { NavbarLink } from '@/interfaces';
 
+import { ROUTES } from '@/utils';
+
 const links: NavbarLink[] = [
     {
-        href: '/carts',
+        href: ROUTES.carts,
         name: 'Carts',
     },
     {
-        href: '/groceries',
+        href: ROUTES.groceries,
         name: 'Groceries',
     },
 ];

@@ -15,6 +15,7 @@ import {
     Main,
 } from '@/components';
 import { useCart } from '@/hooks';
+import { ROUTES } from '@/utils';
 
 const NewCartPage = (): JSX.Element => {
     const router = useRouter();
@@ -27,7 +28,7 @@ const NewCartPage = (): JSX.Element => {
             const success = await createCart(value);
 
             if (success) {
-                router.push('/carts');
+                router.push(ROUTES.carts);
             }
         },
         [router, createCart]
