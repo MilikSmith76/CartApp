@@ -1,32 +1,32 @@
 'use client';
 import type { JSX } from 'react';
 
-import axios from 'axios';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import type { Grocery, PaginationResponse } from '@/interfaces';
-
-import { Button, GroceryCard, Header, LinkButton, Main } from '@/components';
+import {
+    Button,
+    CardContainer,
+    ErrorAlert,
+    GroceryCard,
+    Header,
+    LinkButton,
+    Loading,
+    Main,
+} from '@/components';
+import { useGroceries } from '@/hooks';
 import { DEFAULT_PAGE_SIZE, ROUTES } from '@/utils';
 
 const GroceriesPage = (): JSX.Element => {
-    const [groceries, setgroceries] = useState<Grocery[]>([]);
     const [page, setPage] = useState(0);
-    const [total, setTotal] = useState(0);
 
-    const fetchGroceries = useCallback(async () => {
-        const result = await axios.get<PaginationResponse<Grocery>>(
-            '/api/groceries',
-            {
-                params: {
-                    page,
-                },
-            }
-        );
-
-        setgroceries(result.data.results);
-        setTotal(result.data.count);
-    }, [setgroceries, page]);
+    const {
+        clearErrorMessage,
+        errorMessage,
+        fetchGroceries,
+        groceries,
+        isLoading,
+        total,
+    } = useGroceries();
 
     const toPrevPage = useCallback(() => {
         if (page == 0) {
@@ -48,7 +48,6 @@ const GroceriesPage = (): JSX.Element => {
     );
 
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchGroceries();
     }, [fetchGroceries]);
 
@@ -57,11 +56,28 @@ const GroceriesPage = (): JSX.Element => {
             <Header name='Groceries' />
             <Main>
                 <LinkButton href={`${ROUTES.groceries}/new`} text='Create' />
-                <div className='mt-5 ml-auto grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3'>
-                    {groceries.map((grocery) => (
-                        <GroceryCard grocery={grocery} key={grocery.id} />
-                    ))}
-                </div>
+                {isLoading && <Loading />}
+                {!isLoading && !groceries.length && (
+                    <CardContainer classExtension='mt-5'>
+                        No Groceries could be found.
+                    </CardContainer>
+                )}
+                {!isLoading && groceries.length && (
+                    <>
+                        <ErrorAlert
+                            errorMessage={errorMessage}
+                            onClear={clearErrorMessage}
+                        />
+                        <div className='mt-5 ml-auto grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3'>
+                            {groceries.map((grocery) => (
+                                <GroceryCard
+                                    grocery={grocery}
+                                    key={grocery.id}
+                                />
+                            ))}
+                        </div>
+                    </>
+                )}
                 <Button disabled={!hasPrev} onClick={toPrevPage} text='Prev' />
                 <Button disabled={!hasNext} onClick={toNextPage} text='Next' />
             </Main>

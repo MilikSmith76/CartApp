@@ -7,50 +7,31 @@ import {
     ComboboxOption,
     ComboboxOptions,
 } from '@headlessui/react';
-import axios from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 
-import type {
-    Grocery,
-    GrocerySearchFieldProps,
-    PaginationResponse,
-} from '@/interfaces';
+import type { Grocery, GrocerySearchFieldProps } from '@/interfaces';
 
-import { ROUTES } from '@/utils';
+import { useGroceries } from '@/hooks';
 
 import Button from './button';
+import Loading from './loading';
+
+const FIRST_PAGE_RESULTS_ONLY = 0;
 
 const GrocerySearchField = ({
     onAddGrocery,
 }: GrocerySearchFieldProps): JSX.Element => {
     const [query, setQuery] = useState('');
-
-    const [groceries, setGroceries] = useState<Grocery[]>([]);
     const [selected, setSelected] = useState<Grocery | null>(null);
 
-    const fetchGroceries = useCallback(async () => {
-        if (!query) {
-            setGroceries([]);
-        }
-
-        const result = await axios.get<PaginationResponse<Grocery>>(
-            ROUTES.apiGroceries,
-            {
-                params: {
-                    search: query,
-                },
-            }
-        );
-
-        setGroceries(result.data.results);
-    }, [query, setGroceries]);
+    const { fetchGroceries, groceries, isLoading } = useGroceries();
 
     const onQuery = useCallback(
         (event: ChangeEvent<HTMLInputElement>) => setQuery(event.target.value),
-        []
+        [setQuery]
     );
 
-    const onClose = useCallback(() => setQuery(''), []);
+    const onClose = useCallback(() => setQuery(''), [setQuery]);
 
     const getDisplayName = useCallback(
         (grocery: Grocery | undefined) => grocery?.name ?? '',
@@ -66,9 +47,12 @@ const GrocerySearchField = ({
     }, [onAddGrocery, selected]);
 
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        fetchGroceries();
-    }, [fetchGroceries]);
+        if (!query) {
+            return;
+        }
+
+        fetchGroceries(FIRST_PAGE_RESULTS_ONLY, query);
+    }, [fetchGroceries, query]);
 
     return (
         <div className='mb-5'>
@@ -89,15 +73,21 @@ const GrocerySearchField = ({
                         anchor='bottom'
                         className='border empty:invisible'
                     >
-                        {groceries.map((grocery) => (
-                            <ComboboxOption
-                                className='w-(--input-width) bg-white py-2 pl-3 data-focus:bg-slate-100'
-                                key={grocery.id}
-                                value={grocery}
-                            >
-                                {grocery.name}
-                            </ComboboxOption>
-                        ))}
+                        {isLoading && (
+                            <div className='w-(--input-width) bg-white py-3'>
+                                <Loading />
+                            </div>
+                        )}
+                        {!isLoading &&
+                            groceries.map((grocery) => (
+                                <ComboboxOption
+                                    className='w-(--input-width) bg-white py-2 pl-3 data-focus:bg-slate-100'
+                                    key={grocery.id}
+                                    value={grocery}
+                                >
+                                    {grocery.name}
+                                </ComboboxOption>
+                            ))}
                     </ComboboxOptions>
                 </Combobox>
                 <Button
