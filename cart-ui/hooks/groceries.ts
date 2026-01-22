@@ -10,6 +10,8 @@ import type {
 
 import { ROUTES } from '@/utils';
 
+import useDebounce from './debounce';
+
 const useGroceries = (): UseGroceriesOutput => {
     const [groceries, setGroceries] = useState<Grocery[]>([]);
     const [total, setTotal] = useState(0);
@@ -21,7 +23,7 @@ const useGroceries = (): UseGroceriesOutput => {
             setIsLoading(true);
 
             try {
-                const result = await axios.get<PaginationResponse<Grocery>>(
+                const { data } = await axios.get<PaginationResponse<Grocery>>(
                     ROUTES.apiGroceries,
                     {
                         params: {
@@ -31,8 +33,8 @@ const useGroceries = (): UseGroceriesOutput => {
                     }
                 );
 
-                setGroceries(result.data.results);
-                setTotal(result.data.count);
+                setGroceries(data.results);
+                setTotal(data.count);
             } catch {
                 setErrorMessage(
                     'Was unable to retrieve Grocery items. Please try again.'
@@ -44,12 +46,16 @@ const useGroceries = (): UseGroceriesOutput => {
         [setGroceries, setTotal, setErrorMessage, setIsLoading]
     );
 
+    const { debouncedFunc: debouncedFetchGroceries } =
+        useDebounce(fetchGroceries);
+
     const clearErrorMessage = useCallback(() => {
         setErrorMessage('');
     }, [setErrorMessage]);
 
     return {
         clearErrorMessage,
+        debouncedFetchGroceries,
         errorMessage,
         fetchGroceries,
         groceries,

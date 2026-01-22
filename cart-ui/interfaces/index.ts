@@ -28,5 +28,6 @@ export type * from './textFormFieldProps';
 export type * from './updateCartPageProps';
 export type * from './updateGroceryPageProps';
 export type * from './useCartOutput';
+export type * from './useDebounceOutput';
 export type * from './useGroceriesOutput';
 export type * from './useGroceryOutput';

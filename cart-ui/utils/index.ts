@@ -63,6 +63,7 @@ export const getNumberParametersErrorResponse = (
 
 export {
     BAD_REQUEST,
+    DEFAULT_DEBOUNCE_TIME_MS,
     DEFAULT_EXTERNAL_IMAGE_HEIGHT,
     DEFAULT_EXTERNAL_IMAGE_WIDTH,
     DEFAULT_MAX_CART_GROCERIES,

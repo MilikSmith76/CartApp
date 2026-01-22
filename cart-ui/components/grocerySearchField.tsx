@@ -24,7 +24,7 @@ const GrocerySearchField = ({
     const [query, setQuery] = useState('');
     const [selected, setSelected] = useState<Grocery | null>(null);
 
-    const { fetchGroceries, groceries, isLoading } = useGroceries();
+    const { debouncedFetchGroceries, groceries, isLoading } = useGroceries();
 
     const onQuery = useCallback(
         (event: ChangeEvent<HTMLInputElement>) => setQuery(event.target.value),
@@ -51,8 +51,8 @@ const GrocerySearchField = ({
             return;
         }
 
-        fetchGroceries(FIRST_PAGE_RESULTS_ONLY, query);
-    }, [fetchGroceries, query]);
+        debouncedFetchGroceries(FIRST_PAGE_RESULTS_ONLY, query);
+    }, [debouncedFetchGroceries, query]);
 
     return (
         <div className='mb-5'>
