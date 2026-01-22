@@ -1,15 +1,16 @@
 'use client';
+
 import axios from 'axios';
 import { useCallback, useState } from 'react';
 
-import type { Grocery, UseGroceryOutput } from '@/interfaces';
+import type { Cart, UseCartOutput } from '@/interfaces';
 
-const useGrocery = (): UseGroceryOutput => {
-    const [grocery, setGrocery] = useState<Grocery>();
+const useCart = (): UseCartOutput => {
+    const [cart, setCart] = useState<Cart>();
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
-    const fetchGrocery = useCallback(
+    const fetchCart = useCallback(
         async (id?: string) => {
             if (!id || isNaN(+id)) {
                 return;
@@ -18,22 +19,22 @@ const useGrocery = (): UseGroceryOutput => {
             setIsLoading(true);
 
             try {
-                const result = await axios.get<Grocery>(`/api/groceries/${id}`);
+                const result = await axios.get<Cart>(`/api/carts/${id}`);
 
-                setGrocery(result.data);
+                setCart(result.data);
             } catch {
                 setErrorMessage(
-                    'Was unable to retrieve the Grocery item. It is likely this item does not exist.'
+                    'Was unable to retrieve the Cart item. It is likely this item does not exist.'
                 );
             } finally {
                 setIsLoading(false);
             }
         },
-        [setGrocery, setErrorMessage, setIsLoading]
+        [setCart, setErrorMessage, setIsLoading]
     );
 
-    const createGrocery = useCallback(
-        async (value?: Grocery): Promise<boolean> => {
+    const createCart = useCallback(
+        async (value?: Cart): Promise<boolean> => {
             if (!value) {
                 return false;
             }
@@ -43,15 +44,12 @@ const useGrocery = (): UseGroceryOutput => {
             setIsLoading(true);
 
             try {
-                const result = await axios.post<Grocery>(
-                    '/api/groceries',
-                    value
-                );
+                const result = await axios.post<Cart>('/api/carts', value);
 
-                setGrocery(result.data);
+                setCart(result.data);
             } catch {
                 setErrorMessage(
-                    'Was unable to create the Grocery item. Please try again.'
+                    'Was unable to create the Cart item. Please try again.'
                 );
 
                 success = false;
@@ -61,11 +59,11 @@ const useGrocery = (): UseGroceryOutput => {
 
             return success;
         },
-        [setGrocery, setErrorMessage, setIsLoading]
+        [setCart, setErrorMessage, setIsLoading]
     );
 
-    const updateGrocery = useCallback(
-        async (value?: Grocery): Promise<boolean> => {
+    const updateCart = useCallback(
+        async (value?: Cart): Promise<boolean> => {
             if (!value?.id) {
                 return false;
             }
@@ -75,15 +73,15 @@ const useGrocery = (): UseGroceryOutput => {
             setIsLoading(true);
 
             try {
-                const result = await axios.put<Grocery>(
-                    `/api/groceries/${grocery?.id}`,
+                const result = await axios.put<Cart>(
+                    `/api/carts/${cart?.id}`,
                     value
                 );
 
-                setGrocery(result.data);
+                setCart(result.data);
             } catch {
                 setErrorMessage(
-                    'Was unable to retrieve the Grocery item. Please try again.'
+                    'Was unable to retrieve the Cart item. Please try again.'
                 );
 
                 success = false;
@@ -93,11 +91,11 @@ const useGrocery = (): UseGroceryOutput => {
 
             return success;
         },
-        [grocery, setGrocery, setErrorMessage, setIsLoading]
+        [cart, setCart, setErrorMessage, setIsLoading]
     );
 
-    const deleteGrocery = useCallback(async () => {
-        if (!grocery?.id) {
+    const deleteCart = useCallback(async () => {
+        if (!cart?.id) {
             return false;
         }
 
@@ -106,12 +104,12 @@ const useGrocery = (): UseGroceryOutput => {
         setIsLoading(true);
 
         try {
-            await axios.delete(`/api/groceries/${grocery?.id}`);
+            await axios.delete(`/api/carts/${cart?.id}`);
 
-            setGrocery(undefined);
+            setCart(undefined);
         } catch {
             setErrorMessage(
-                'Was unable to delete the Grocery item. Please try again.'
+                'Was unable to delete the Cart item. Please try again.'
             );
 
             success = false;
@@ -120,22 +118,22 @@ const useGrocery = (): UseGroceryOutput => {
         }
 
         return success;
-    }, [grocery, setIsLoading, setGrocery, setErrorMessage]);
+    }, [cart, setIsLoading, setCart, setErrorMessage]);
 
     const clearErrorMessage = useCallback(() => {
         setErrorMessage('');
     }, [setErrorMessage]);
 
     return {
+        cart,
         clearErrorMessage,
-        createGrocery,
-        deleteGrocery,
+        createCart,
+        deleteCart,
         errorMessage,
-        fetchGrocery,
-        grocery,
+        fetchCart,
         isLoading,
-        updateGrocery,
+        updateCart,
     };
 };
 
-export default useGrocery;
+export default useCart;

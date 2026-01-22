@@ -4,7 +4,7 @@ import type { JSX } from 'react';
 import { useRouter } from 'next/navigation';
 import { use, useCallback, useEffect } from 'react';
 
-import type { UpdateGroceryPageProps } from '@/interfaces';
+import type { Grocery, UpdateGroceryPageProps } from '@/interfaces';
 
 import {
     Button,
@@ -33,8 +33,7 @@ const UpdateGroceryPage = ({ params }: UpdateGroceryPageProps): JSX.Element => {
     const router = useRouter();
 
     const onSubmit = useCallback(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        async (value: any) => {
+        async (value?: Grocery) => {
             await updateGrocery(value);
         },
         [updateGrocery]

@@ -1,60 +1,73 @@
 'use client';
 import type { JSX } from 'react';
 
-import axios from 'axios';
-import { use, useCallback, useEffect, useState } from 'react';
+import { use, useCallback, useEffect } from 'react';
 
 import type { Cart, UpdateCartPageProps } from '@/interfaces';
 
 import {
     CardContainer,
     CartForm,
+    ErrorAlert,
     Header,
     LinkButton,
+    Loading,
     Main,
 } from '@/components';
+import { useCart } from '@/hooks';
 
 const UpdateCartPage = ({ params }: UpdateCartPageProps): JSX.Element => {
     const { id } = use(params);
 
-    const [cart, setCart] = useState<Cart>();
+    const {
+        cart,
+        clearErrorMessage,
+        errorMessage,
+        fetchCart,
+        isLoading,
+        updateCart,
+    } = useCart();
 
     const onSubmit = useCallback(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        async (value: any) => {
-            const result = await axios.put<Cart>(`/api/carts/${id}`, value);
-
-            setCart(result.data);
+        async (value?: Cart) => {
+            await updateCart(value);
         },
-        [id, setCart]
+        [updateCart]
     );
 
-    const getCart = useCallback(async () => {
-        const result = await axios.get<Cart>(`/api/carts/${id}`);
-
-        setCart(result.data);
-    }, [id, setCart]);
-
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        getCart();
-    }, [getCart]);
+        fetchCart(id);
+    }, [fetchCart, id]);
 
     return (
         <>
             <Header name={`Edit Cart ${id}`} />
             <Main>
-                <LinkButton
-                    href={`/carts/${id}/groceries`}
-                    text='Edit Cart Groceries'
-                />
-                <CardContainer classExtension='mt-5'>
-                    <CartForm
-                        cart={cart}
-                        formHeader='Edit Cart'
-                        onSubmit={onSubmit}
-                    />
-                </CardContainer>
+                {(!id || isLoading) && <Loading />}
+                {!isLoading && cart && (
+                    <>
+                        <LinkButton
+                            href={`/carts/${id}/groceries`}
+                            text='Edit Cart Groceries'
+                        />
+                        <ErrorAlert
+                            errorMessage={errorMessage}
+                            onClear={clearErrorMessage}
+                        />
+                        <CardContainer classExtension='mt-5'>
+                            <CartForm
+                                cart={cart}
+                                formHeader='Edit Cart'
+                                onSubmit={onSubmit}
+                            />
+                        </CardContainer>
+                    </>
+                )}
+                {!isLoading && !cart && (
+                    <CardContainer>
+                        {`Cart ${id} cannot be found`}
+                    </CardContainer>
+                )}
             </Main>
         </>
     );

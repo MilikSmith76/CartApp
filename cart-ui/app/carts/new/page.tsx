@@ -1,32 +1,57 @@
 'use client';
 import type { JSX } from 'react';
 
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 
-import { CardContainer, CartForm, Header, Main } from '@/components';
+import type { Cart } from '@/interfaces';
+
+import {
+    CardContainer,
+    CartForm,
+    ErrorAlert,
+    Header,
+    Loading,
+    Main,
+} from '@/components';
+import { useCart } from '@/hooks';
 
 const NewCartPage = (): JSX.Element => {
     const router = useRouter();
 
-    const onSubmit = useCallback(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        async (value: any) => {
-            await axios.post('/api/carts', value);
+    const { clearErrorMessage, createCart, errorMessage, isLoading } =
+        useCart();
 
-            router.push('/carts');
+    const onSubmit = useCallback(
+        async (value?: Cart) => {
+            const success = await createCart(value);
+
+            if (success) {
+                router.push('/carts');
+            }
         },
-        [router]
+        [router, createCart]
     );
 
     return (
         <>
             <Header name='Create New Cart' />
             <Main>
-                <CardContainer>
-                    <CartForm formHeader='New Cart' onSubmit={onSubmit} />
-                </CardContainer>
+                {isLoading && <Loading />}
+                {!isLoading && (
+                    <>
+                        <ErrorAlert
+                            errorMessage={errorMessage}
+                            onClear={clearErrorMessage}
+                        />
+                        <CardContainer classExtension='mt-5'>
+                            <CartForm
+                                formHeader='New Cart'
+                                onSubmit={onSubmit}
+                            />
+                        </CardContainer>
+                    </>
+                )}
             </Main>
         </>
     );

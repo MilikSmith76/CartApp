@@ -4,6 +4,8 @@ import type { JSX } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 
+import type { Grocery } from '@/interfaces';
+
 import {
     CardContainer,
     ErrorAlert,
@@ -21,8 +23,7 @@ const NewGroceryPage = (): JSX.Element => {
     const router = useRouter();
 
     const onSubmit = useCallback(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        async (value: any) => {
+        async (value?: Grocery) => {
             const success = await createGrocery(value);
 
             if (success) {
@@ -37,7 +38,6 @@ const NewGroceryPage = (): JSX.Element => {
             <Header name='Create New Grocery' />
             <Main>
                 {isLoading && <Loading />}
-
                 {!isLoading && (
                     <>
                         <ErrorAlert
