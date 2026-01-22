@@ -1,6 +1,7 @@
 'use client';
 import axios from 'axios';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+import useSWR from 'swr';
 
 import type {
     Grocery,
@@ -8,23 +9,28 @@ import type {
     UseGroceriesOutput,
 } from '@/interfaces';
 
-import { ROUTES } from '@/utils';
+import {
+    DEFAULT_ERROR_RETRIES,
+    DEFAULT_ERROR_RETRY_INTERVAL,
+    DEFAULT_REFRESH_INTERVAL,
+    ROUTES,
+} from '@/utils';
 
 import useDebounce from './debounce';
 
 const useGroceries = (): UseGroceriesOutput => {
-    const [groceries, setGroceries] = useState<Grocery[]>([]);
-    const [total, setTotal] = useState(0);
-    const [isLoading, setIsLoading] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
+    const [page, setPage] = useState(0);
+    const [search, setSearch] = useState('');
 
-    const fetchGroceries = useCallback(
-        async (page: number = 0, search?: string) => {
-            setIsLoading(true);
-
+    const fetcher = useCallback(
+        async (
+            url: string,
+            page?: number,
+            search?: string
+        ): Promise<PaginationResponse<Grocery>> => {
             try {
                 const { data } = await axios.get<PaginationResponse<Grocery>>(
-                    ROUTES.apiGroceries,
+                    url,
                     {
                         params: {
                             page,
@@ -33,25 +39,47 @@ const useGroceries = (): UseGroceriesOutput => {
                     }
                 );
 
-                setGroceries(data.results);
-                setTotal(data.count);
+                return data;
             } catch {
-                setErrorMessage(
+                throw new Error(
                     'Was unable to retrieve Grocery items. Please try again.'
                 );
-            } finally {
-                setIsLoading(false);
             }
         },
-        [setGroceries, setTotal, setErrorMessage, setIsLoading]
+        []
+    );
+
+    const { data, error, isLoading, mutate } = useSWR(
+        [ROUTES.apiGroceries, page, search],
+        fetcher,
+        {
+            errorRetryCount: DEFAULT_ERROR_RETRIES,
+            errorRetryInterval: DEFAULT_ERROR_RETRY_INTERVAL,
+            refreshInterval: DEFAULT_REFRESH_INTERVAL,
+            shouldRetryOnError: true,
+        }
+    );
+
+    const groceries = useMemo(() => data?.results ?? [], [data]);
+
+    const total = useMemo(() => data?.count ?? 0, [data]);
+
+    const errorMessage = useMemo((): string => error?.message ?? '', [error]);
+
+    const fetchGroceries = useCallback(
+        async (page: number = 0, search?: string) => {
+            setPage(page);
+            setSearch(search ?? '');
+        },
+        [setPage, setSearch]
     );
 
     const { debouncedFunc: debouncedFetchGroceries } =
         useDebounce(fetchGroceries);
 
     const clearErrorMessage = useCallback(() => {
-        setErrorMessage('');
-    }, [setErrorMessage]);
+        mutate();
+    }, [mutate]);
 
     return {
         clearErrorMessage,

@@ -62,7 +62,7 @@ const GroceriesPage = (): JSX.Element => {
                         No Groceries could be found.
                     </CardContainer>
                 )}
-                {!isLoading && groceries.length && (
+                {!isLoading && !!groceries.length && (
                     <>
                         <ErrorAlert
                             errorMessage={errorMessage}
