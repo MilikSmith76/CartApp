@@ -1,4 +1,6 @@
 'use client';
+import type { AxiosResponse } from 'axios';
+
 import axios from 'axios';
 import { useCallback, useState } from 'react';
 
@@ -47,10 +49,11 @@ const useGrocery = (): UseGroceryOutput => {
             setIsLoading(true);
 
             try {
-                const result = await axios.post<Grocery>(
-                    ROUTES.apiGroceries,
-                    value
-                );
+                const result = await axios.post<
+                    Grocery,
+                    AxiosResponse<Grocery>,
+                    Grocery
+                >(ROUTES.apiGroceries, value);
 
                 setGrocery(result.data);
             } catch {
@@ -79,10 +82,11 @@ const useGrocery = (): UseGroceryOutput => {
             setIsLoading(true);
 
             try {
-                const result = await axios.put<Grocery>(
-                    `${ROUTES.apiGroceries}/${grocery?.id}`,
-                    value
-                );
+                const result = await axios.put<
+                    Grocery,
+                    AxiosResponse<Grocery>,
+                    Grocery
+                >(`${ROUTES.apiGroceries}/${grocery?.id}`, value);
 
                 setGrocery(result.data);
             } catch {

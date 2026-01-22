@@ -1,4 +1,4 @@
-import { Grocery } from './grocery';
+import type { Grocery } from './grocery';
 
 interface UseGroceryOutput {
     clearErrorMessage: () => void;

@@ -1,6 +1,7 @@
 'use client';
+import type { JSX } from 'react';
+
 import { Description, Field, Input, Label } from '@headlessui/react';
-import { JSX } from 'react';
 import { Field as FinalField } from 'react-final-form';
 
 import type { TextFormFieldProps } from '@/interfaces';

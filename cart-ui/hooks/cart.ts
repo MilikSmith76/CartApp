@@ -1,4 +1,6 @@
 'use client';
+import type { AxiosResponse } from 'axios';
+
 import axios from 'axios';
 import { useCallback, useState } from 'react';
 
@@ -47,7 +49,11 @@ const useCart = (): UseCartOutput => {
             setIsLoading(true);
 
             try {
-                const result = await axios.post<Cart>(ROUTES.apiCarts, value);
+                const result = await axios.post<
+                    Cart,
+                    AxiosResponse<Cart>,
+                    Cart
+                >(ROUTES.apiCarts, value);
 
                 setCart(result.data);
             } catch {
@@ -76,7 +82,7 @@ const useCart = (): UseCartOutput => {
             setIsLoading(true);
 
             try {
-                const result = await axios.put<Cart>(
+                const result = await axios.put<Cart, AxiosResponse<Cart>, Cart>(
                     `${ROUTES.apiCarts}/${cart?.id}`,
                     value
                 );
