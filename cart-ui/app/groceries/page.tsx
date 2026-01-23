@@ -76,10 +76,18 @@ const GroceriesPage = (): JSX.Element => {
                                 />
                             ))}
                         </div>
+                        <Button
+                            disabled={!hasPrev}
+                            onClick={toPrevPage}
+                            text='Prev'
+                        />
+                        <Button
+                            disabled={!hasNext}
+                            onClick={toNextPage}
+                            text='Next'
+                        />
                     </>
                 )}
-                <Button disabled={!hasPrev} onClick={toPrevPage} text='Prev' />
-                <Button disabled={!hasNext} onClick={toNextPage} text='Next' />
             </Main>
         </>
     );

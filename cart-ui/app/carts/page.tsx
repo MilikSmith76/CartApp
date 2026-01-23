@@ -1,29 +1,24 @@
 'use client';
 import type { JSX } from 'react';
 
-import axios from 'axios';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import type { Cart, PaginationResponse } from '@/interfaces';
-
-import { Button, CartCard, Header, LinkButton, Main } from '@/components';
+import {
+    Button,
+    CardContainer,
+    CartCard,
+    Header,
+    LinkButton,
+    Loading,
+    Main,
+} from '@/components';
+import { useCarts } from '@/hooks';
 import { DEFAULT_PAGE_SIZE, ROUTES } from '@/utils';
 
 const CartsPage = (): JSX.Element => {
-    const [carts, setCarts] = useState<Cart[]>([]);
     const [page, setPage] = useState(0);
-    const [total, setTotal] = useState(0);
 
-    const fetchCarts = useCallback(async () => {
-        const result = await axios.get<PaginationResponse<Cart>>('/api/carts', {
-            params: {
-                page,
-            },
-        });
-
-        setCarts(result.data.results);
-        setTotal(result.data.count);
-    }, [setCarts, page]);
+    const { carts, fetchCarts, isLoading, total } = useCarts();
 
     const toPrevPage = useCallback(() => {
         if (page == 0) {
@@ -45,7 +40,6 @@ const CartsPage = (): JSX.Element => {
     );
 
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchCarts();
     }, [fetchCarts]);
 
@@ -54,13 +48,31 @@ const CartsPage = (): JSX.Element => {
             <Header name='Carts' />
             <Main>
                 <LinkButton href={`${ROUTES.carts}/new`} text='Create' />
-                <div className='mt-5 ml-auto grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3'>
-                    {carts.map((cart) => (
-                        <CartCard cart={cart} key={cart.id} />
-                    ))}
-                </div>
-                <Button disabled={!hasPrev} onClick={toPrevPage} text='Prev' />
-                <Button disabled={!hasNext} onClick={toNextPage} text='Next' />
+                {isLoading && <Loading />}
+                {!isLoading && !carts.length && (
+                    <CardContainer classExtension='mt-5'>
+                        No Carts could be found.
+                    </CardContainer>
+                )}
+                {!isLoading && !!carts.length && (
+                    <>
+                        <div className='mt-5 ml-auto grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3'>
+                            {carts.map((cart) => (
+                                <CartCard cart={cart} key={cart.id} />
+                            ))}
+                        </div>
+                        <Button
+                            disabled={!hasPrev}
+                            onClick={toPrevPage}
+                            text='Prev'
+                        />
+                        <Button
+                            disabled={!hasNext}
+                            onClick={toNextPage}
+                            text='Next'
+                        />
+                    </>
+                )}
             </Main>
         </>
     );

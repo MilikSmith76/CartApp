@@ -2,11 +2,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import useSWR from 'swr';
 
-import type {
-    Grocery,
-    PaginationResponse,
-    UseGroceriesOutput,
-} from '@/interfaces';
+import type { Cart, PaginationResponse, UseCartsOutput } from '@/interfaces';
 
 import {
     baseListFetcher,
@@ -19,7 +15,7 @@ import {
 
 import useDebounce from './debounce';
 
-const useGroceries = (): UseGroceriesOutput => {
+const useCarts = (): UseCartsOutput => {
     const [page, setPage] = useState(0);
     const [search, setSearch] = useState('');
 
@@ -28,14 +24,14 @@ const useGroceries = (): UseGroceriesOutput => {
             url: string,
             page?: number,
             search?: string
-        ): Promise<PaginationResponse<Grocery>> => {
+        ): Promise<PaginationResponse<Cart>> => {
             return baseListFetcher(url, page, DEFAULT_PAGE_SIZE, search);
         },
         []
     );
 
     const { data, error, isLoading, mutate } = useSWR(
-        [ROUTES.apiGroceries, page, search],
+        [ROUTES.apiCarts, page, search],
         fetcher,
         {
             errorRetryCount: DEFAULT_ERROR_RETRIES,
@@ -45,13 +41,13 @@ const useGroceries = (): UseGroceriesOutput => {
         }
     );
 
-    const groceries = useMemo(() => data?.results ?? [], [data]);
+    const carts = useMemo(() => data?.results ?? [], [data]);
 
     const total = useMemo(() => data?.count ?? 0, [data]);
 
     const errorMessage = useMemo((): string => error?.message ?? '', [error]);
 
-    const fetchGroceries = useCallback(
+    const fetchCarts = useCallback(
         async (page: number = 0, search?: string) => {
             setPage(page);
             setSearch(search ?? '');
@@ -59,22 +55,21 @@ const useGroceries = (): UseGroceriesOutput => {
         [setPage, setSearch]
     );
 
-    const { debouncedFunc: debouncedFetchGroceries } =
-        useDebounce(fetchGroceries);
+    const { debouncedFunc: debouncedFetchCarts } = useDebounce(fetchCarts);
 
     const clearErrorMessage = useCallback(() => {
         mutate();
     }, [mutate]);
 
     return {
+        carts,
         clearErrorMessage,
-        debouncedFetchGroceries,
+        debouncedFetchCarts,
         errorMessage,
-        fetchGroceries,
-        groceries,
+        fetchCarts,
         isLoading,
         total,
     };
 };
 
-export default useGroceries;
+export default useCarts;
