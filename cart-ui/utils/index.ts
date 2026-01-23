@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 
 import type { ParameterErrors } from '@/interfaces';
 
-import { BAD_REQUEST } from './constants';
+import { BAD_REQUEST, DEFAULT_REQUEST_TIMEOUT } from './constants';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getRequestParams = (searchParams: URLSearchParams): any => {
@@ -75,6 +75,7 @@ export const baseListFetcher = async <ResponseType>(
                 page,
                 search,
             },
+            timeout: DEFAULT_REQUEST_TIMEOUT,
         });
 
         return data;
@@ -94,6 +95,7 @@ export {
     DEFAULT_MAX_CART_GROCERIES,
     DEFAULT_PAGE_SIZE,
     DEFAULT_REFRESH_INTERVAL,
+    DEFAULT_REQUEST_TIMEOUT,
     FORM_REQUIRED_FEILD_ERROR,
     ROUTES,
 } from './constants';

@@ -10,7 +10,7 @@ import type {
     SuccessResponse,
 } from '@/interfaces';
 
-import { DEFAULT_PAGE_SIZE } from '@/utils';
+import { DEFAULT_PAGE_SIZE, DEFAULT_REQUEST_TIMEOUT } from '@/utils';
 
 class GroceryService {
     private endpoint = `${process.env.API_HOST}/groceries`;
@@ -56,21 +56,26 @@ class GroceryService {
             GroceryApi,
             AxiosResponse<GroceryApi>,
             GroceryApi
-        >(this.endpoint, GroceryService.uiToApi(input));
+        >(this.endpoint, GroceryService.uiToApi(input), {
+            timeout: DEFAULT_REQUEST_TIMEOUT,
+        });
 
         return GroceryService.apiToUi(result.data);
     }
 
     public async delete(id: number): Promise<SuccessResponse> {
         const result = await axios.delete<SuccessResponse>(
-            `${this.endpoint}/${id}`
+            `${this.endpoint}/${id}`,
+            { timeout: DEFAULT_REQUEST_TIMEOUT }
         );
 
         return result.data;
     }
 
     public async get(id: number): Promise<Grocery> {
-        const result = await axios.get<GroceryApi>(`${this.endpoint}/${id}`);
+        const result = await axios.get<GroceryApi>(`${this.endpoint}/${id}`, {
+            timeout: DEFAULT_REQUEST_TIMEOUT,
+        });
 
         return GroceryService.apiToUi(result.data);
     }
@@ -90,6 +95,7 @@ class GroceryService {
                     offset,
                     search,
                 },
+                timeout: DEFAULT_REQUEST_TIMEOUT,
             }
         );
 
@@ -104,7 +110,9 @@ class GroceryService {
             GroceryApi,
             AxiosResponse<GroceryApi>,
             GroceryApi
-        >(`${this.endpoint}/${id}`, GroceryService.uiToApi(input));
+        >(`${this.endpoint}/${id}`, GroceryService.uiToApi(input), {
+            timeout: DEFAULT_REQUEST_TIMEOUT,
+        });
 
         return GroceryService.apiToUi(result.data);
     }

@@ -6,7 +6,7 @@ import { useCallback, useState } from 'react';
 
 import type { Grocery, UseGroceryOutput } from '@/interfaces';
 
-import { ROUTES } from '@/utils';
+import { DEFAULT_REQUEST_TIMEOUT, ROUTES } from '@/utils';
 
 const useGrocery = (): UseGroceryOutput => {
     const [grocery, setGrocery] = useState<Grocery>();
@@ -23,7 +23,8 @@ const useGrocery = (): UseGroceryOutput => {
 
             try {
                 const result = await axios.get<Grocery>(
-                    `${ROUTES.apiGroceries}/${id}`
+                    `${ROUTES.apiGroceries}/${id}`,
+                    { timeout: DEFAULT_REQUEST_TIMEOUT }
                 );
 
                 setGrocery(result.data);
@@ -53,7 +54,9 @@ const useGrocery = (): UseGroceryOutput => {
                     Grocery,
                     AxiosResponse<Grocery>,
                     Grocery
-                >(ROUTES.apiGroceries, value);
+                >(ROUTES.apiGroceries, value, {
+                    timeout: DEFAULT_REQUEST_TIMEOUT,
+                });
 
                 setGrocery(result.data);
             } catch {
@@ -86,7 +89,9 @@ const useGrocery = (): UseGroceryOutput => {
                     Grocery,
                     AxiosResponse<Grocery>,
                     Grocery
-                >(`${ROUTES.apiGroceries}/${grocery?.id}`, value);
+                >(`${ROUTES.apiGroceries}/${grocery?.id}`, value, {
+                    timeout: DEFAULT_REQUEST_TIMEOUT,
+                });
 
                 setGrocery(result.data);
             } catch {
@@ -114,7 +119,9 @@ const useGrocery = (): UseGroceryOutput => {
         setIsLoading(true);
 
         try {
-            await axios.delete(`${ROUTES.apiGroceries}/${grocery?.id}`);
+            await axios.delete(`${ROUTES.apiGroceries}/${grocery?.id}`, {
+                timeout: DEFAULT_REQUEST_TIMEOUT,
+            });
 
             setGrocery(undefined);
         } catch {

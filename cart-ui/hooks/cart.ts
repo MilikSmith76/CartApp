@@ -6,7 +6,7 @@ import { useCallback, useState } from 'react';
 
 import type { Cart, UseCartOutput } from '@/interfaces';
 
-import { ROUTES } from '@/utils';
+import { DEFAULT_REQUEST_TIMEOUT, ROUTES } from '@/utils';
 
 const useCart = (): UseCartOutput => {
     const [cart, setCart] = useState<Cart>();
@@ -23,7 +23,8 @@ const useCart = (): UseCartOutput => {
 
             try {
                 const result = await axios.get<Cart>(
-                    `${ROUTES.apiCarts}/${id}`
+                    `${ROUTES.apiCarts}/${id}`,
+                    { timeout: DEFAULT_REQUEST_TIMEOUT }
                 );
 
                 setCart(result.data);
@@ -53,7 +54,9 @@ const useCart = (): UseCartOutput => {
                     Cart,
                     AxiosResponse<Cart>,
                     Cart
-                >(ROUTES.apiCarts, value);
+                >(ROUTES.apiCarts, value, {
+                    timeout: DEFAULT_REQUEST_TIMEOUT,
+                });
 
                 setCart(result.data);
             } catch {
@@ -84,7 +87,8 @@ const useCart = (): UseCartOutput => {
             try {
                 const result = await axios.put<Cart, AxiosResponse<Cart>, Cart>(
                     `${ROUTES.apiCarts}/${cart?.id}`,
-                    value
+                    value,
+                    { timeout: DEFAULT_REQUEST_TIMEOUT }
                 );
 
                 setCart(result.data);
@@ -113,7 +117,9 @@ const useCart = (): UseCartOutput => {
         setIsLoading(true);
 
         try {
-            await axios.delete(`${ROUTES.apiCarts}/${cart?.id}`);
+            await axios.delete(`${ROUTES.apiCarts}/${cart?.id}`, {
+                timeout: DEFAULT_REQUEST_TIMEOUT,
+            });
 
             setCart(undefined);
         } catch {

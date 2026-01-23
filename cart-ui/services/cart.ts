@@ -10,7 +10,7 @@ import type {
     SuccessResponse,
 } from '@/interfaces';
 
-import { DEFAULT_PAGE_SIZE } from '@/utils';
+import { DEFAULT_PAGE_SIZE, DEFAULT_REQUEST_TIMEOUT } from '@/utils';
 
 class CartService {
     private endpoint = `${process.env.API_HOST}/carts`;
@@ -20,21 +20,24 @@ class CartService {
             CartApi,
             AxiosResponse<CartApi>,
             CartApi
-        >(this.endpoint, input);
+        >(this.endpoint, input, { timeout: DEFAULT_REQUEST_TIMEOUT });
 
         return result.data;
     }
 
     public async delete(id: number): Promise<SuccessResponse> {
         const result = await axios.delete<SuccessResponse>(
-            `${this.endpoint}/${id}`
+            `${this.endpoint}/${id}`,
+            { timeout: DEFAULT_REQUEST_TIMEOUT }
         );
 
         return result.data;
     }
 
     public async get(id: number): Promise<Cart> {
-        const result = await axios.get<CartApi>(`${this.endpoint}/${id}`);
+        const result = await axios.get<CartApi>(`${this.endpoint}/${id}`, {
+            timeout: DEFAULT_REQUEST_TIMEOUT,
+        });
 
         return result.data;
     }
@@ -52,6 +55,7 @@ class CartService {
                     limit,
                     offset,
                 },
+                timeout: DEFAULT_REQUEST_TIMEOUT,
             }
         );
 
@@ -68,7 +72,9 @@ class CartService {
             CartApi,
             AxiosResponse<CartApi>,
             CartApi
-        >(`${this.endpoint}/${id}`, input);
+        >(`${this.endpoint}/${id}`, input, {
+            timeout: DEFAULT_REQUEST_TIMEOUT,
+        });
 
         return result.data;
     }

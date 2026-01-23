@@ -13,7 +13,7 @@ import type {
     SuccessResponse,
 } from '@/interfaces';
 
-import { DEFAULT_PAGE_SIZE } from '@/utils';
+import { DEFAULT_PAGE_SIZE, DEFAULT_REQUEST_TIMEOUT } from '@/utils';
 
 import GroceryService from './grocery';
 
@@ -73,7 +73,7 @@ class CartGroceryService {
             BulkUpsertResponse<CartGroceryApi>,
             AxiosResponse<BulkUpsertResponse<CartGroceryApi>>,
             BulkUpsertRequest<CartGroceryApi>
-        >(this.endpoint, request);
+        >(this.endpoint, request, { timeout: DEFAULT_REQUEST_TIMEOUT });
 
         const response: BulkUpsertResponse<CartGrocery> = {
             items: result.data.items.map(CartGroceryService.apiToUi),
@@ -84,7 +84,8 @@ class CartGroceryService {
 
     public async delete(id: number): Promise<SuccessResponse> {
         const result = await axios.delete<SuccessResponse>(
-            `${this.endpoint}/${id}`
+            `${this.endpoint}/${id}`,
+            { timeout: DEFAULT_REQUEST_TIMEOUT }
         );
 
         return result.data;
@@ -92,7 +93,8 @@ class CartGroceryService {
 
     public async get(id: number): Promise<CartGrocery> {
         const result = await axios.get<CartGroceryApi>(
-            `${this.endpoint}/${id}`
+            `${this.endpoint}/${id}`,
+            { timeout: DEFAULT_REQUEST_TIMEOUT }
         );
 
         return CartGroceryService.apiToUi(result.data);
@@ -113,6 +115,7 @@ class CartGroceryService {
                     limit,
                     offset,
                 },
+                timeout: DEFAULT_REQUEST_TIMEOUT,
             }
         );
 
