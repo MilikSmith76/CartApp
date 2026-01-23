@@ -10,6 +10,7 @@ import type {
 
 import {
     baseListFetcher,
+    DEFAULT_DEDUPE_INTERVAL,
     DEFAULT_ERROR_RETRIES,
     DEFAULT_ERROR_RETRY_INTERVAL,
     DEFAULT_PAGE_SIZE,
@@ -24,20 +25,19 @@ const useGroceries = (): UseGroceriesOutput => {
     const [search, setSearch] = useState('');
 
     const fetcher = useCallback(
-        async (
-            url: string,
-            page?: number,
-            search?: string
-        ): Promise<PaginationResponse<Grocery>> => {
-            return baseListFetcher(url, page, DEFAULT_PAGE_SIZE, search);
+        async ([url, page, search]: string[]): Promise<
+            PaginationResponse<Grocery>
+        > => {
+            return baseListFetcher(url, +page, DEFAULT_PAGE_SIZE, search);
         },
         []
     );
 
     const { data, error, isLoading, mutate } = useSWR(
-        [ROUTES.apiGroceries, page, search],
+        [ROUTES.apiGroceries, page.toString(), search],
         fetcher,
         {
+            dedupingInterval: DEFAULT_DEDUPE_INTERVAL,
             errorRetryCount: DEFAULT_ERROR_RETRIES,
             errorRetryInterval: DEFAULT_ERROR_RETRY_INTERVAL,
             refreshInterval: DEFAULT_REFRESH_INTERVAL,

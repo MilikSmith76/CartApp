@@ -32,3 +32,4 @@ export type * from './useCartsOutput';
 export type * from './useDebounceOutput';
 export type * from './useGroceriesOutput';
 export type * from './useGroceryOutput';
+export type * from './usePaginationProps';

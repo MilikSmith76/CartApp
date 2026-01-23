@@ -1,7 +1,7 @@
 'use client';
 import type { JSX } from 'react';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect } from 'react';
 
 import {
     Button,
@@ -13,12 +13,10 @@ import {
     Loading,
     Main,
 } from '@/components';
-import { useGroceries } from '@/hooks';
-import { DEFAULT_PAGE_SIZE, ROUTES } from '@/utils';
+import { useGroceries, usePagination } from '@/hooks';
+import { ROUTES } from '@/utils';
 
 const GroceriesPage = (): JSX.Element => {
-    const [page, setPage] = useState(0);
-
     const {
         clearErrorMessage,
         errorMessage,
@@ -28,28 +26,12 @@ const GroceriesPage = (): JSX.Element => {
         total,
     } = useGroceries();
 
-    const toPrevPage = useCallback(() => {
-        if (page == 0) {
-            return;
-        }
-
-        setPage(page - 1);
-    }, [setPage, page]);
-
-    const toNextPage = useCallback(() => {
-        setPage(page + 1);
-    }, [setPage, page]);
-
-    const hasPrev = useMemo(() => page > 0, [page]);
-
-    const hasNext = useMemo(
-        () => page * DEFAULT_PAGE_SIZE + groceries.length < total,
-        [page, groceries, total]
-    );
+    const { hasNext, hasPrev, page, toNextPage, toPrevPage } =
+        usePagination(total);
 
     useEffect(() => {
-        fetchGroceries();
-    }, [fetchGroceries]);
+        fetchGroceries(page);
+    }, [page, fetchGroceries]);
 
     return (
         <>

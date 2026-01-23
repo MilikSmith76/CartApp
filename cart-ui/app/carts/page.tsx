@@ -1,7 +1,7 @@
 'use client';
 import type { JSX } from 'react';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect } from 'react';
 
 import {
     Button,
@@ -12,36 +12,18 @@ import {
     Loading,
     Main,
 } from '@/components';
-import { useCarts } from '@/hooks';
-import { DEFAULT_PAGE_SIZE, ROUTES } from '@/utils';
+import { useCarts, usePagination } from '@/hooks';
+import { ROUTES } from '@/utils';
 
 const CartsPage = (): JSX.Element => {
-    const [page, setPage] = useState(0);
-
     const { carts, fetchCarts, isLoading, total } = useCarts();
 
-    const toPrevPage = useCallback(() => {
-        if (page == 0) {
-            return;
-        }
-
-        setPage(page - 1);
-    }, [setPage, page]);
-
-    const toNextPage = useCallback(() => {
-        setPage(page + 1);
-    }, [setPage, page]);
-
-    const hasPrev = useMemo(() => page > 0, [page]);
-
-    const hasNext = useMemo(
-        () => page * DEFAULT_PAGE_SIZE + carts.length < total,
-        [page, carts, total]
-    );
+    const { hasNext, hasPrev, page, toNextPage, toPrevPage } =
+        usePagination(total);
 
     useEffect(() => {
-        fetchCarts();
-    }, [fetchCarts]);
+        fetchCarts(page);
+    }, [page, fetchCarts]);
 
     return (
         <>
