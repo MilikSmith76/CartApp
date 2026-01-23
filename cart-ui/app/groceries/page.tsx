@@ -10,12 +10,12 @@ import {
     GroceryCard,
     Header,
     LinkButton,
+    ListContainer,
     Loading,
     Main,
 } from '@/components';
 import { useGroceries, usePagination } from '@/hooks';
 import { ROUTES } from '@/utils';
-
 const GroceriesPage = (): JSX.Element => {
     const {
         clearErrorMessage,
@@ -50,14 +50,14 @@ const GroceriesPage = (): JSX.Element => {
                             errorMessage={errorMessage}
                             onClear={clearErrorMessage}
                         />
-                        <div className='mt-5 ml-auto grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3'>
+                        <ListContainer>
                             {groceries.map((grocery) => (
                                 <GroceryCard
                                     grocery={grocery}
                                     key={grocery.id}
                                 />
                             ))}
-                        </div>
+                        </ListContainer>
                         <Button
                             disabled={!hasPrev}
                             onClick={toPrevPage}

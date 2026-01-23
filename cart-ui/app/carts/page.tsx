@@ -9,6 +9,7 @@ import {
     CartCard,
     Header,
     LinkButton,
+    ListContainer,
     Loading,
     Main,
 } from '@/components';
@@ -38,11 +39,11 @@ const CartsPage = (): JSX.Element => {
                 )}
                 {!isLoading && !!carts.length && (
                     <>
-                        <div className='mt-5 ml-auto grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3'>
+                        <ListContainer>
                             {carts.map((cart) => (
                                 <CartCard cart={cart} key={cart.id} />
                             ))}
-                        </div>
+                        </ListContainer>
                         <Button
                             disabled={!hasPrev}
                             onClick={toPrevPage}

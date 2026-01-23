@@ -18,6 +18,7 @@ export type * from './groceryFormProps';
 export type * from './grocerySearchFieldProps';
 export type * from './headerProps';
 export type * from './linkButtonProps';
+export type * from './listContainerProps';
 export type * from './mainProps';
 export type * from './navbarLink';
 export type * from './paginationResponse';
