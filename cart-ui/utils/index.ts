@@ -84,8 +84,13 @@ export const baseListFetcher = async <ResponseType>(
     }
 };
 
+export const duplicate = <T>(value: T): T => {
+    return JSON.parse(JSON.stringify(value));
+};
+
 export {
     BAD_REQUEST,
+    DEFAULT_BULK_REQUEST,
     DEFAULT_DEBOUNCE_TIME_MS,
     DEFAULT_DEDUPE_INTERVAL,
     DEFAULT_ERROR_RETRIES,

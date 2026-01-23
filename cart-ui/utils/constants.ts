@@ -1,4 +1,9 @@
+import type { BulkUpsertRequest } from '@/interfaces';
+
 const BAD_REQUEST = 400;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const DEFAULT_BULK_REQUEST: BulkUpsertRequest<any> = { items: [] };
 
 const DEFAULT_DEBOUNCE_TIME_MS = 300;
 
@@ -32,6 +37,7 @@ const ROUTES = {
 
 export {
     BAD_REQUEST,
+    DEFAULT_BULK_REQUEST,
     DEFAULT_DEBOUNCE_TIME_MS,
     DEFAULT_DEDUPE_INTERVAL,
     DEFAULT_ERROR_RETRIES,

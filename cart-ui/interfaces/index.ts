@@ -27,6 +27,8 @@ export type * from './successResponse';
 export type * from './textFormFieldProps';
 export type * from './updateCartPageProps';
 export type * from './updateGroceryPageProps';
+export type * from './useBulkCartGroceriesRequestOutput';
+export type * from './useCartGroceryOutput';
 export type * from './useCartOutput';
 export type * from './useCartsOutput';
 export type * from './useDebounceOutput';

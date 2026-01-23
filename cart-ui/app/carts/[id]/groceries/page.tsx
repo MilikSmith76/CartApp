@@ -1,16 +1,13 @@
 'use client';
 import type { JSX } from 'react';
 
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { use, useCallback, useEffect, useState } from 'react';
+import { use, useCallback, useEffect } from 'react';
 
 import type {
     BulkUpsertRequest,
-    BulkUpsertResponse,
     CartGrocery,
     Grocery,
-    PaginationResponse,
     UpdateCartPageProps,
 } from '@/interfaces';
 
@@ -18,104 +15,73 @@ import {
     Button,
     CardContainer,
     CartGroceriesForm,
+    ErrorAlert,
     GrocerySearchField,
     Header,
     LinkButton,
+    Loading,
     Main,
 } from '@/components';
-import { DEFAULT_MAX_CART_GROCERIES, ROUTES } from '@/utils';
-
-const DEFAULT_BULK_REQUEST: BulkUpsertRequest<CartGrocery> = { items: [] };
+import { useBulkCartGroceriesRequest, useCart } from '@/hooks';
+import { ROUTES } from '@/utils';
 
 const UpdateCartGroceriesPage = ({
     params,
 }: UpdateCartPageProps): JSX.Element => {
-    const { id: cartId } = use(params);
-
     const router = useRouter();
 
-    const [bulkUpsertRequest, setBulkUpsertRequest] =
-        useState<BulkUpsertRequest<CartGrocery>>(DEFAULT_BULK_REQUEST);
+    const { id: cartId } = use(params);
+
+    const { cart, deleteCart, fetchCart } = useCart();
+
+    const {
+        addCartGroceryItem,
+        bulkCartGroceriesUpsert,
+        bulkUpsert,
+        clearErrorMessage,
+        errorMessage,
+        fetchCartGroceries,
+        isLoading,
+        removeCartGroceryItem,
+    } = useBulkCartGroceriesRequest();
 
     const onSubmit = useCallback(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        async (value: any) => {
-            const result = await axios.put<BulkUpsertResponse<CartGrocery>>(
-                ROUTES.apiCartGroceries,
-                value
-            );
-
-            // No convertion for the data because BulkUpsertRequest and BulkUpsertResponse are the same
-            setBulkUpsertRequest(result.data);
+        async (value: BulkUpsertRequest<CartGrocery>) => {
+            await bulkCartGroceriesUpsert(value);
         },
-        [setBulkUpsertRequest]
+        [bulkCartGroceriesUpsert]
     );
 
-    const getCartGroceries = useCallback(async () => {
-        const result = await axios.get<PaginationResponse<CartGrocery>>(
-            ROUTES.apiCartGroceries,
-            {
-                params: {
-                    cartId,
-                    limit: DEFAULT_MAX_CART_GROCERIES,
-                },
-            }
-        );
-
-        setBulkUpsertRequest({
-            items: result.data.results,
-        });
-    }, [cartId, setBulkUpsertRequest]);
-
     const onAddGrocery = useCallback(
-        (grocery: Grocery) => {
-            const updateCartGroceries: BulkUpsertRequest<CartGrocery> = {
-                items: [
-                    ...bulkUpsertRequest.items,
-                    {
-                        cartId: +cartId,
-                        grocery: grocery,
-                        groceryId: grocery.id ?? 0,
-                        purchased: false,
-                        quantity: 1,
-                    },
-                ],
-            };
-
-            setBulkUpsertRequest(updateCartGroceries);
+        async (grocery: Grocery) => {
+            await addCartGroceryItem(+cartId, grocery);
         },
-        [bulkUpsertRequest, setBulkUpsertRequest, cartId]
+        [cartId, addCartGroceryItem]
     );
 
     const onDelete = useCallback(async () => {
-        await axios.delete(`${ROUTES.apiCarts}/${cartId}`);
+        const success = await deleteCart();
 
-        router.push(ROUTES.carts);
-    }, [router, cartId]);
+        if (success) {
+            router.push(ROUTES.carts);
+        }
+    }, [router, deleteCart]);
 
     const onCartGroceryDelete = useCallback(
         (index: number) => async (): Promise<void> => {
-            const item = bulkUpsertRequest.items[index];
-
-            if (item.id) {
-                await axios.delete(`${ROUTES.apiCartGroceries}/${cartId}`);
-            }
-
-            const updateCartGroceries: BulkUpsertRequest<CartGrocery> = {
-                items: bulkUpsertRequest.items.filter(
-                    (_, checkIndex) => checkIndex != index
-                ),
-            };
-
-            setBulkUpsertRequest(updateCartGroceries);
+            await removeCartGroceryItem(index);
         },
-        [cartId, bulkUpsertRequest, setBulkUpsertRequest]
+        [removeCartGroceryItem]
     );
 
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        getCartGroceries();
-    }, [getCartGroceries]);
+        if (!cartId || isNaN(+cartId)) {
+            return;
+        }
+
+        fetchCart(cartId);
+        fetchCartGroceries(+cartId);
+    }, [cartId, fetchCart, fetchCartGroceries]);
 
     return (
         <>
@@ -133,17 +99,33 @@ const UpdateCartGroceriesPage = ({
                         text='Delete'
                     />
                 </div>
-                <CardContainer classExtension='mt-5'>
-                    <GrocerySearchField onAddGrocery={onAddGrocery} />
-                </CardContainer>
-                <CardContainer classExtension='mt-5'>
-                    <CartGroceriesForm
-                        bulkUpsertRequest={bulkUpsertRequest}
-                        formHeader='Edit Cart Groceries'
-                        onItemDelete={onCartGroceryDelete}
-                        onSubmit={onSubmit}
-                    />
-                </CardContainer>
+                {cart && (
+                    <CardContainer classExtension='mt-5'>
+                        <GrocerySearchField onAddGrocery={onAddGrocery} />
+                    </CardContainer>
+                )}
+                {(!cartId || isLoading) && <Loading />}
+                {!isLoading && !!bulkUpsert.items.length && (
+                    <>
+                        <ErrorAlert
+                            errorMessage={errorMessage}
+                            onClear={clearErrorMessage}
+                        />
+                        <CardContainer classExtension='mt-5'>
+                            <CartGroceriesForm
+                                bulkUpsertRequest={bulkUpsert}
+                                formHeader='Edit Cart Groceries'
+                                onItemDelete={onCartGroceryDelete}
+                                onSubmit={onSubmit}
+                            />
+                        </CardContainer>
+                    </>
+                )}
+                {!isLoading && !bulkUpsert.items.length && (
+                    <CardContainer classExtension='mt-5'>
+                        No groceries are in this cart.
+                    </CardContainer>
+                )}
             </Main>
         </>
     );
