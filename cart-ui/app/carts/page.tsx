@@ -31,7 +31,7 @@ const CartsPage = (): JSX.Element => {
             <Header name='Carts' />
             <Main>
                 <LinkButton href={`${ROUTES.carts}/new`} text='Create' />
-                {isLoading && <Loading />}
+                <Loading isLoading={isLoading} />
                 {!isLoading && !carts.length && (
                     <CardContainer classExtension='mt-5'>
                         No Carts could be found.

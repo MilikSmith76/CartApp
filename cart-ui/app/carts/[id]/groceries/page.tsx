@@ -95,7 +95,7 @@ const UpdateCartGroceriesPage = ({
                     errorMessage={errorMessage}
                     onClear={clearErrorMessage}
                 />
-                {(!cartId || isLoading) && <Loading />}
+                <Loading isLoading={!cartId || isLoading} />
                 {!isLoading && cart && !!bulkUpsert.items.length && (
                     <CardContainer classExtension='mt-5'>
                         <CartGroceriesForm

@@ -38,7 +38,7 @@ const NewGroceryPage = (): JSX.Element => {
         <>
             <Header name='Create New Grocery' />
             <Main>
-                {isLoading && <Loading />}
+                <Loading isLoading={isLoading} />
                 {!isLoading && (
                     <>
                         <ErrorAlert

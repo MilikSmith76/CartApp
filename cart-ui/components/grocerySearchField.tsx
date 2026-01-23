@@ -75,7 +75,7 @@ const GrocerySearchField = ({
                     >
                         {isLoading && (
                             <div className='w-(--input-width) bg-white py-3'>
-                                <Loading />
+                                <Loading isLoading={isLoading} />
                             </div>
                         )}
                         {!isLoading &&

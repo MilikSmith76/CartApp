@@ -38,7 +38,7 @@ const NewCartPage = (): JSX.Element => {
         <>
             <Header name='Create New Cart' />
             <Main>
-                {isLoading && <Loading />}
+                <Loading isLoading={isLoading} />
                 {!isLoading && (
                     <>
                         <ErrorAlert

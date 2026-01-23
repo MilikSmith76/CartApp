@@ -38,7 +38,7 @@ const GroceriesPage = (): JSX.Element => {
             <Header name='Groceries' />
             <Main>
                 <LinkButton href={`${ROUTES.groceries}/new`} text='Create' />
-                {isLoading && <Loading />}
+                <Loading isLoading={isLoading} />
                 {!isLoading && !groceries.length && (
                     <CardContainer classExtension='mt-5'>
                         No Groceries could be found.

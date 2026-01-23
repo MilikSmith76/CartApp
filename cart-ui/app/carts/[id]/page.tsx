@@ -57,7 +57,7 @@ const UpdateCartPage = ({ params }: UpdateCartPageProps): JSX.Element => {
         <>
             <Header name={`Edit Cart ${id}`} />
             <Main>
-                {(!id || isLoading) && <Loading />}
+                <Loading isLoading={!id || isLoading} />
                 {!isLoading && cart && (
                     <>
                         <div className='flex'>

@@ -55,7 +55,7 @@ const UpdateGroceryPage = ({ params }: UpdateGroceryPageProps): JSX.Element => {
         <>
             <Header name={`Edit Grocery ${id}`} />
             <Main>
-                {isLoading && <Loading />}
+                <Loading isLoading={isLoading} />
                 {!isLoading && grocery && (
                     <>
                         <Button
