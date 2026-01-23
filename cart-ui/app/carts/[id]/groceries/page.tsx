@@ -1,7 +1,6 @@
 'use client';
 import type { JSX } from 'react';
 
-import { useRouter } from 'next/navigation';
 import { use, useCallback, useEffect } from 'react';
 
 import type {
@@ -12,7 +11,6 @@ import type {
 } from '@/interfaces';
 
 import {
-    Button,
     CardContainer,
     CartGroceriesForm,
     ErrorAlert,
@@ -28,11 +26,9 @@ import { ROUTES } from '@/utils';
 const UpdateCartGroceriesPage = ({
     params,
 }: UpdateCartPageProps): JSX.Element => {
-    const router = useRouter();
-
     const { id: cartId } = use(params);
 
-    const { cart, deleteCart, fetchCart } = useCart();
+    const { cart, fetchCart } = useCart();
 
     const {
         addCartGroceryItem,
@@ -59,14 +55,6 @@ const UpdateCartGroceriesPage = ({
         [cartId, addCartGroceryItem]
     );
 
-    const onDelete = useCallback(async () => {
-        const success = await deleteCart();
-
-        if (success) {
-            router.push(ROUTES.carts);
-        }
-    }, [router, deleteCart]);
-
     const onCartGroceryDelete = useCallback(
         (index: number) => async (): Promise<void> => {
             await removeCartGroceryItem(index);
@@ -80,50 +68,52 @@ const UpdateCartGroceriesPage = ({
         }
 
         fetchCart(cartId);
+    }, [cartId, fetchCart]);
+
+    useEffect(() => {
+        if (!cart) {
+            return;
+        }
+
         fetchCartGroceries(+cartId);
-    }, [cartId, fetchCart, fetchCartGroceries]);
+    }, [cart, cartId, fetchCartGroceries]);
 
     return (
         <>
             <Header name={`Edit Cart ${cartId}`} />
             <Main>
-                <div className='flex'>
-                    <LinkButton
-                        className='ml-auto inline-flex w-fit cursor-pointer rounded-md bg-emerald-500 p-5 text-white hover:bg-emerald-300'
-                        href={`${ROUTES.carts}/${cartId}`}
-                        text='Edit Cart'
-                    />
-                    <Button
-                        className='ml-5 inline-flex w-fit cursor-pointer rounded-md bg-red-500 p-5 text-white hover:bg-red-300'
-                        onClick={onDelete}
-                        text='Delete'
-                    />
-                </div>
+                <LinkButton
+                    href={`${ROUTES.carts}/${cartId}`}
+                    text='Edit Cart'
+                />
                 {cart && (
                     <CardContainer classExtension='mt-5'>
                         <GrocerySearchField onAddGrocery={onAddGrocery} />
                     </CardContainer>
                 )}
+                <ErrorAlert
+                    errorMessage={errorMessage}
+                    onClear={clearErrorMessage}
+                />
                 {(!cartId || isLoading) && <Loading />}
-                {!isLoading && !!bulkUpsert.items.length && (
-                    <>
-                        <ErrorAlert
-                            errorMessage={errorMessage}
-                            onClear={clearErrorMessage}
+                {!isLoading && cart && !!bulkUpsert.items.length && (
+                    <CardContainer classExtension='mt-5'>
+                        <CartGroceriesForm
+                            bulkUpsertRequest={bulkUpsert}
+                            formHeader='Edit Cart Groceries'
+                            onItemDelete={onCartGroceryDelete}
+                            onSubmit={onSubmit}
                         />
-                        <CardContainer classExtension='mt-5'>
-                            <CartGroceriesForm
-                                bulkUpsertRequest={bulkUpsert}
-                                formHeader='Edit Cart Groceries'
-                                onItemDelete={onCartGroceryDelete}
-                                onSubmit={onSubmit}
-                            />
-                        </CardContainer>
-                    </>
+                    </CardContainer>
                 )}
-                {!isLoading && !bulkUpsert.items.length && (
+                {!isLoading && cart && !bulkUpsert.items.length && (
                     <CardContainer classExtension='mt-5'>
                         No groceries are in this cart.
+                    </CardContainer>
+                )}
+                {!isLoading && !cart && (
+                    <CardContainer classExtension='mt-5'>
+                        {`Cart ${cartId} cannot be found`}
                     </CardContainer>
                 )}
             </Main>

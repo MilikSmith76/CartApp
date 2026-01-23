@@ -1,11 +1,13 @@
 'use client';
 import type { JSX } from 'react';
 
+import { useRouter } from 'next/navigation';
 import { use, useCallback, useEffect } from 'react';
 
 import type { Cart, UpdateCartPageProps } from '@/interfaces';
 
 import {
+    Button,
     CardContainer,
     CartForm,
     ErrorAlert,
@@ -18,11 +20,14 @@ import { useCart } from '@/hooks';
 import { ROUTES } from '@/utils';
 
 const UpdateCartPage = ({ params }: UpdateCartPageProps): JSX.Element => {
+    const router = useRouter();
+
     const { id } = use(params);
 
     const {
         cart,
         clearErrorMessage,
+        deleteCart,
         errorMessage,
         fetchCart,
         isLoading,
@@ -36,6 +41,14 @@ const UpdateCartPage = ({ params }: UpdateCartPageProps): JSX.Element => {
         [updateCart]
     );
 
+    const onDelete = useCallback(async () => {
+        const success = await deleteCart();
+
+        if (success) {
+            router.push(ROUTES.carts);
+        }
+    }, [router, deleteCart]);
+
     useEffect(() => {
         fetchCart(id);
     }, [fetchCart, id]);
@@ -47,10 +60,18 @@ const UpdateCartPage = ({ params }: UpdateCartPageProps): JSX.Element => {
                 {(!id || isLoading) && <Loading />}
                 {!isLoading && cart && (
                     <>
-                        <LinkButton
-                            href={`${ROUTES.carts}/${id}/groceries`}
-                            text='Edit Cart Groceries'
-                        />
+                        <div className='flex'>
+                            <LinkButton
+                                className='ml-auto inline-flex w-fit cursor-pointer rounded-md bg-emerald-500 p-5 text-white hover:bg-emerald-300'
+                                href={`${ROUTES.carts}/${id}/groceries`}
+                                text='Edit Cart Groceries'
+                            />
+                            <Button
+                                className='ml-5 inline-flex w-fit cursor-pointer rounded-md bg-red-500 p-5 text-white hover:bg-red-300'
+                                onClick={onDelete}
+                                text='Delete'
+                            />
+                        </div>
                         <ErrorAlert
                             errorMessage={errorMessage}
                             onClear={clearErrorMessage}
