@@ -12,9 +12,12 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
 
-from utils.constants import DEFAULT_PAGE_SIZE, MIN_ERROR_STATUS_CODE
-from utils.enums import EndpointParameters
-from utils.functions import get_int_value
+from utils import (
+    DEFAULT_PAGE_SIZE,
+    MIN_ERROR_STATUS_CODE,
+    EndpointParameters,
+    get_int_value,
+)
 
 
 class BaseResourcesApiView(ListCreateAPIView):

@@ -5,7 +5,7 @@ Groceries View.
 from resources.models import Grocery
 from resources.serializers import GrocerySerializer
 from resources.views.base_resources_api_view import BaseResourcesApiView
-from utils.enums import CacheResources
+from utils import CacheResources
 
 
 class GroceriesView(BaseResourcesApiView):

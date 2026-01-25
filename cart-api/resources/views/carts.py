@@ -5,7 +5,7 @@ Carts View.
 from resources.models import Cart
 from resources.serializers import CartSerializer
 from resources.views.base_resources_api_view import BaseResourcesApiView
-from utils.enums import CacheResources
+from utils import CacheResources
 
 
 class CartsView(BaseResourcesApiView):

@@ -13,7 +13,7 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
 
 from resources.models.base_model import BaseModel
-from utils.constants import MIN_ERROR_STATUS_CODE
+from utils import MIN_ERROR_STATUS_CODE
 
 
 class BaseResourceApiView(RetrieveUpdateAPIView):

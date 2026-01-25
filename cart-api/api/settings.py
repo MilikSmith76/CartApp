@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 
-from utils.constants import (
+from utils import (
     APP_DEBUG,
     DEFAULT_CACHE_LIFE_TIME_SECONDS,
     DEFAULT_PAGE_SIZE,

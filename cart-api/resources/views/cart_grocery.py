@@ -5,7 +5,7 @@ Cart Grocery View.
 from resources.models import CartGrocery
 from resources.serializers import CartGrocerySerializer
 from resources.views.base_resource_api_view import BaseResourceApiView
-from utils.enums import CacheResources, EndpointParameters
+from utils import CacheResources, EndpointParameters
 
 
 class CartGroceryView(BaseResourceApiView):

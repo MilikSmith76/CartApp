@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from resources.models import CartGrocery
 from resources.serializers import CartGrocerySerializer
 from resources.views.base_resources_api_view import BaseResourcesApiView
-from utils.enums import CacheResources
+from utils import CacheResources
 
 
 class CartGroceriesView(BaseResourcesApiView):
