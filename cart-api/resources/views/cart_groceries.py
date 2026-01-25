@@ -2,22 +2,25 @@
 Cart Groceries View.
 """
 
+from django.core.cache import cache
 from rest_framework import status
-from rest_framework.generics import ListCreateAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
 
 from resources.models import CartGrocery
 from resources.serializers import CartGrocerySerializer
+from resources.views.base_resources_api_view import BaseResourcesApiView
+from utils.enums import CacheResources
 
 
-class CartGroceriesView(ListCreateAPIView):
+class CartGroceriesView(BaseResourcesApiView):
     """
     View for retrieving a list of cart groceries, creating a new one,
     and bulk upserting cart groceries.
     """
 
     serializer_class = CartGrocerySerializer
+    cache_resource = CacheResources.CART_GROCERY.value
 
     def get_queryset(self):
         """
@@ -77,6 +80,8 @@ class CartGroceriesView(ListCreateAPIView):
             serializer.is_valid()
             serializer.save()
             response_items.append(serializer.data)
+
+        cache.clear()
 
         response = {'items': response_items}
         return Response(response, status=status.HTTP_200_OK)

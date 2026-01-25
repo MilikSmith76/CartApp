@@ -2,44 +2,20 @@
 Cart Grocery View.
 """
 
-import datetime
-
-from rest_framework import status
-from rest_framework.generics import RetrieveUpdateAPIView
-from rest_framework.request import Request
-from rest_framework.response import Response
-
 from resources.models import CartGrocery
 from resources.serializers import CartGrocerySerializer
+from resources.views.base_resource_api_view import BaseResourceApiView
+from utils.enums import CacheResources, EndpointParameters
 
 
-class CartGroceryView(RetrieveUpdateAPIView):
+class CartGroceryView(BaseResourceApiView):
     """
     View for getting individual cart groceries, updating a cart grocery,
     and deleting a cart grocery.
     """
 
-    queryset = CartGrocery.objects.all()  # pylint: disable=no-member
+    queryset = CartGrocery.objects.all()
     serializer_class = CartGrocerySerializer
-    lookup_field = 'id'
-    lookup_url_kwarg = 'cart_grocery_id'
-
-    def delete(self, _request: Request, cart_grocery_id: int) -> Response:
-        """
-        Deletes a Cart Grocery record.
-
-        :param cart_grocery_id: The id of the Cart Grocery record to delete.
-        :type cart_grocery_id: int
-
-        :return: A response indicating that deleting the record was successful.
-        :rtype: Response
-        """
-
-        cart = CartGrocery.active_objects.get_record(cart_grocery_id)
-
-        cart.deleted = True
-        cart.deleted_at = datetime.date.today()
-        cart.save()
-
-        success_message = {'success': True}
-        return Response(success_message, status=status.HTTP_200_OK)
+    cache_resource = CacheResources.CART_GROCERY.value
+    model = CartGrocery
+    lookup_url_kwarg = EndpointParameters.CART_GROCERY_ID.value

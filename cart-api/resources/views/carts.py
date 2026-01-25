@@ -2,19 +2,17 @@
 Carts View.
 """
 
-from rest_framework import filters
-from rest_framework.generics import ListCreateAPIView
-
 from resources.models import Cart
 from resources.serializers import CartSerializer
+from resources.views.base_resources_api_view import BaseResourcesApiView
+from utils.enums import CacheResources
 
 
-class CartsView(ListCreateAPIView):
+class CartsView(BaseResourcesApiView):
     """
     View for retrieving a list of carts, or creating a new one.
     """
 
     queryset = Cart.active_objects.all()
     serializer_class = CartSerializer
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['name']
+    cache_resource = CacheResources.CART.value

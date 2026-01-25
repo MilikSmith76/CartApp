@@ -2,19 +2,17 @@
 Groceries View.
 """
 
-from rest_framework import filters
-from rest_framework.generics import ListCreateAPIView
-
 from resources.models import Grocery
 from resources.serializers import GrocerySerializer
+from resources.views.base_resources_api_view import BaseResourcesApiView
+from utils.enums import CacheResources
 
 
-class GroceriesView(ListCreateAPIView):
+class GroceriesView(BaseResourcesApiView):
     """
     View for retrieving a list of groceries, or creating a new one.
     """
 
     queryset = Grocery.active_objects.all()
     serializer_class = GrocerySerializer
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['name']
+    cache_resource = CacheResources.GROCERY.value

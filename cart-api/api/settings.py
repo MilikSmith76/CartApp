@@ -14,6 +14,7 @@ from pathlib import Path
 
 from utils.constants import (
     APP_DEBUG,
+    DEFAULT_CACHE_LIFE_TIME_SECONDS,
     DEFAULT_PAGE_SIZE,
     DEFAULT_TIMEOUT,
     DJANGO_ALLOWED_HOST,
@@ -89,6 +90,17 @@ DATABASES = {
         'OPTIONS': {
             'timeout': DEFAULT_TIMEOUT,
         },
+    }
+}
+
+# Cache
+# https://docs.djangoproject.com/en/6.0/topics/cache/
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'cart-api-cache',
+        'TIMEOUT': DEFAULT_CACHE_LIFE_TIME_SECONDS,
     }
 }
 
