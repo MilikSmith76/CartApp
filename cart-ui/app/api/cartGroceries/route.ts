@@ -21,7 +21,7 @@ const GET = async (request: NextRequest): Promise<NextResponse> => {
         return errorResponse;
     }
 
-    const response = await cartGroceryService.getPage(cartId, page, limit);
+    const response = await cartGroceryService.getPage({ cartId, limit, page });
 
     return NextResponse.json(response);
 };

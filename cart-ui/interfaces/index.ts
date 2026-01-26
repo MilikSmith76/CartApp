@@ -1,4 +1,5 @@
 export type * from './apiPaginationResponse';
+export type * from './baseResource';
 export type * from './bulkUpsertRequest';
 export type * from './bulkUpsertResponse';
 export type * from './buttonProps';

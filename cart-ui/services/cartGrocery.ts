@@ -3,22 +3,29 @@ import type { AxiosResponse } from 'axios';
 import axios from 'axios';
 
 import type {
-    ApiPaginationResponse,
     BulkUpsertRequest,
     BulkUpsertResponse,
     CartGrocery,
     CartGroceryApi,
     GroceryApi,
-    PaginationResponse,
-    SuccessResponse,
 } from '@/interfaces';
 
-import { DEFAULT_PAGE_SIZE, DEFAULT_REQUEST_TIMEOUT } from '@/utils';
+import { DEFAULT_REQUEST_TIMEOUT, ENDPOINT_RESOURCES } from '@/utils';
 
+import BaseResourceService from './baseResource';
 import GroceryService from './grocery';
 
-class CartGroceryService {
-    private endpoint = `${process.env.API_HOST}/cart_groceries`;
+class CartGroceryService extends BaseResourceService<
+    CartGrocery,
+    CartGroceryApi
+> {
+    constructor() {
+        super(
+            ENDPOINT_RESOURCES.cartGrocery,
+            CartGroceryService.apiToUi,
+            CartGroceryService.uiToApi
+        );
+    }
 
     static apiToUi({
         cart,
@@ -69,60 +76,19 @@ class CartGroceryService {
             items: input.map(CartGroceryService.uiToApi),
         };
 
-        const result = await axios.put<
+        const { data } = await axios.put<
             BulkUpsertResponse<CartGroceryApi>,
             AxiosResponse<BulkUpsertResponse<CartGroceryApi>>,
             BulkUpsertRequest<CartGroceryApi>
         >(this.endpoint, request, { timeout: DEFAULT_REQUEST_TIMEOUT });
 
         const response: BulkUpsertResponse<CartGrocery> = {
-            items: result.data.items.map(CartGroceryService.apiToUi),
+            items: data.items.map(CartGroceryService.apiToUi),
         };
+
+        this.cache.clear();
 
         return response;
-    }
-
-    public async delete(id: number): Promise<SuccessResponse> {
-        const result = await axios.delete<SuccessResponse>(
-            `${this.endpoint}/${id}`,
-            { timeout: DEFAULT_REQUEST_TIMEOUT }
-        );
-
-        return result.data;
-    }
-
-    public async get(id: number): Promise<CartGrocery> {
-        const result = await axios.get<CartGroceryApi>(
-            `${this.endpoint}/${id}`,
-            { timeout: DEFAULT_REQUEST_TIMEOUT }
-        );
-
-        return CartGroceryService.apiToUi(result.data);
-    }
-
-    public async getPage(
-        cartId: number,
-        page: number = 0,
-        limit: number = DEFAULT_PAGE_SIZE
-    ): Promise<PaginationResponse<CartGrocery>> {
-        const offset = page * limit;
-
-        const result = await axios.get<ApiPaginationResponse<CartGroceryApi>>(
-            this.endpoint,
-            {
-                params: {
-                    cart_id: cartId,
-                    limit,
-                    offset,
-                },
-                timeout: DEFAULT_REQUEST_TIMEOUT,
-            }
-        );
-
-        return {
-            count: result.data.count,
-            results: result.data.results.map(CartGroceryService.apiToUi),
-        };
     }
 }
 

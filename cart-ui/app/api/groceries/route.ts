@@ -23,7 +23,7 @@ const GET = async (request: NextRequest): Promise<NextResponse> => {
         return errorResponse;
     }
 
-    const response = await grocerySerice.getPage(page, limit, search);
+    const response = await grocerySerice.getPage({ limit, page, search });
 
     return NextResponse.json(response);
 };

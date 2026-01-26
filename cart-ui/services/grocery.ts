@@ -1,19 +1,17 @@
-import type { AxiosResponse } from 'axios';
+import type { Grocery, GroceryApi } from '@/interfaces';
 
-import axios from 'axios';
+import { ENDPOINT_RESOURCES } from '@/utils';
 
-import type {
-    ApiPaginationResponse,
-    Grocery,
-    GroceryApi,
-    PaginationResponse,
-    SuccessResponse,
-} from '@/interfaces';
+import BaseResourceService from './baseResource';
 
-import { DEFAULT_PAGE_SIZE, DEFAULT_REQUEST_TIMEOUT } from '@/utils';
-
-class GroceryService {
-    private endpoint = `${process.env.API_HOST}/groceries`;
+class GroceryService extends BaseResourceService<Grocery, GroceryApi> {
+    constructor() {
+        super(
+            ENDPOINT_RESOURCES.groceries,
+            GroceryService.apiToUi,
+            GroceryService.uiToApi
+        );
+    }
 
     static apiToUi({
         description,
@@ -49,72 +47,6 @@ class GroceryService {
             price,
             purchased,
         };
-    }
-
-    public async create(input: Grocery): Promise<Grocery> {
-        const result = await axios.post<
-            GroceryApi,
-            AxiosResponse<GroceryApi>,
-            GroceryApi
-        >(this.endpoint, GroceryService.uiToApi(input), {
-            timeout: DEFAULT_REQUEST_TIMEOUT,
-        });
-
-        return GroceryService.apiToUi(result.data);
-    }
-
-    public async delete(id: number): Promise<SuccessResponse> {
-        const result = await axios.delete<SuccessResponse>(
-            `${this.endpoint}/${id}`,
-            { timeout: DEFAULT_REQUEST_TIMEOUT }
-        );
-
-        return result.data;
-    }
-
-    public async get(id: number): Promise<Grocery> {
-        const result = await axios.get<GroceryApi>(`${this.endpoint}/${id}`, {
-            timeout: DEFAULT_REQUEST_TIMEOUT,
-        });
-
-        return GroceryService.apiToUi(result.data);
-    }
-
-    public async getPage(
-        page: number = 0,
-        limit: number = DEFAULT_PAGE_SIZE,
-        search: string
-    ): Promise<PaginationResponse<Grocery>> {
-        const offset = page * limit;
-
-        const result = await axios.get<ApiPaginationResponse<GroceryApi>>(
-            this.endpoint,
-            {
-                params: {
-                    limit,
-                    offset,
-                    search,
-                },
-                timeout: DEFAULT_REQUEST_TIMEOUT,
-            }
-        );
-
-        return {
-            count: result.data.count,
-            results: result.data.results.map(GroceryService.apiToUi),
-        };
-    }
-
-    public async update(id: number, input: Grocery): Promise<Grocery> {
-        const result = await axios.put<
-            GroceryApi,
-            AxiosResponse<GroceryApi>,
-            GroceryApi
-        >(`${this.endpoint}/${id}`, GroceryService.uiToApi(input), {
-            timeout: DEFAULT_REQUEST_TIMEOUT,
-        });
-
-        return GroceryService.apiToUi(result.data);
     }
 }
 
