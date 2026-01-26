@@ -24,6 +24,7 @@ export type * from './mainProps';
 export type * from './navbarLink';
 export type * from './paginationResponse';
 export type * from './parameterErrors';
+export type * from './parameters';
 export type * from './rootLayoutProps';
 export type * from './successResponse';
 export type * from './textFormFieldProps';
