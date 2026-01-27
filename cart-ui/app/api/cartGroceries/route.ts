@@ -14,7 +14,7 @@ const GET = async (request: NextRequest): Promise<NextResponse> => {
 
     const errorResponse = getNumberParametersErrorResponse(
         ['cartId', 'page', 'limit'],
-        [cartId, page, limit]
+        [cartId as string, page as string, limit as string]
     );
 
     if (errorResponse) {

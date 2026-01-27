@@ -14,7 +14,7 @@ const GET = async (request: NextRequest): Promise<NextResponse> => {
 
     const errorResponse = getNumberParametersErrorResponse(
         ['page', 'limit'],
-        [page, limit]
+        [page as string, limit as string]
     );
 
     if (errorResponse) {
