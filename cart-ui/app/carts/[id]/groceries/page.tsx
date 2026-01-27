@@ -37,6 +37,7 @@ const UpdateCartGroceriesPage = ({
         clearErrorMessage,
         errorMessage,
         fetchCartGroceries,
+        finishInitialLoading,
         isLoading,
         removeCartGroceryItem,
     } = useBulkCartGroceriesRequest();
@@ -72,11 +73,15 @@ const UpdateCartGroceriesPage = ({
 
     useEffect(() => {
         if (!cart) {
+            if (cartId && isNaN(+cartId)) {
+                finishInitialLoading();
+            }
+
             return;
         }
 
         fetchCartGroceries(+cartId);
-    }, [cart, cartId, fetchCartGroceries]);
+    }, [cart, cartId, fetchCartGroceries, finishInitialLoading]);
 
     return (
         <>

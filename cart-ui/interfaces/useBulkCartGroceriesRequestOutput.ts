@@ -20,6 +20,7 @@ interface UseBulkCartGroceriesRequestOutput {
         page?: number,
         search?: string
     ) => Promise<void>;
+    finishInitialLoading: () => void;
     isLoading: boolean;
     removeCartGroceryItem: (index: number) => Promise<boolean>;
 }

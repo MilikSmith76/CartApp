@@ -2,7 +2,7 @@
 import type { JSX } from 'react';
 
 import { useRouter } from 'next/navigation';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import type { Cart } from '@/interfaces';
 
@@ -20,8 +20,13 @@ import { ROUTES } from '@/utils';
 const NewCartPage = (): JSX.Element => {
     const router = useRouter();
 
-    const { clearErrorMessage, createCart, errorMessage, isLoading } =
-        useCart();
+    const {
+        clearErrorMessage,
+        createCart,
+        errorMessage,
+        finishInitialLoading,
+        isLoading,
+    } = useCart();
 
     const onSubmit = useCallback(
         async (value?: Cart) => {
@@ -33,6 +38,10 @@ const NewCartPage = (): JSX.Element => {
         },
         [router, createCart]
     );
+
+    useEffect(() => {
+        finishInitialLoading();
+    }, [finishInitialLoading]);
 
     return (
         <>

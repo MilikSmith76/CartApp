@@ -25,7 +25,7 @@ const useBulkCartGroceriesRequest = (): UseBulkCartGroceriesRequestOutput => {
     const [bulkUpsert, setBulkUpsert] = useState<
         BulkUpsertRequest<CartGrocery>
     >(duplicate(DEFAULT_BULK_REQUEST));
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState('');
 
     const fetchCartGroceries = useCallback(
@@ -160,6 +160,10 @@ const useBulkCartGroceriesRequest = (): UseBulkCartGroceriesRequestOutput => {
         setErrorMessage('');
     }, [setErrorMessage]);
 
+    const finishInitialLoading = useCallback(() => {
+        setIsLoading(false);
+    }, [setIsLoading]);
+
     return {
         addCartGroceryItem,
         bulkCartGroceriesUpsert,
@@ -168,6 +172,7 @@ const useBulkCartGroceriesRequest = (): UseBulkCartGroceriesRequestOutput => {
         debouncedFetchCartGroceries,
         errorMessage,
         fetchCartGroceries,
+        finishInitialLoading,
         isLoading,
         removeCartGroceryItem,
     };

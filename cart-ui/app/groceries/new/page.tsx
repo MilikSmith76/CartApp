@@ -2,7 +2,7 @@
 import type { JSX } from 'react';
 
 import { useRouter } from 'next/navigation';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import type { Grocery } from '@/interfaces';
 
@@ -18,8 +18,13 @@ import { useGrocery } from '@/hooks';
 import { ROUTES } from '@/utils';
 
 const NewGroceryPage = (): JSX.Element => {
-    const { clearErrorMessage, createGrocery, errorMessage, isLoading } =
-        useGrocery();
+    const {
+        clearErrorMessage,
+        createGrocery,
+        errorMessage,
+        finishInitialLoading,
+        isLoading,
+    } = useGrocery();
 
     const router = useRouter();
 
@@ -33,6 +38,10 @@ const NewGroceryPage = (): JSX.Element => {
         },
         [router, createGrocery]
     );
+
+    useEffect(() => {
+        finishInitialLoading();
+    }, [finishInitialLoading]);
 
     return (
         <>

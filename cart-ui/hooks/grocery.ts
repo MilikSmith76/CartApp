@@ -10,7 +10,7 @@ import { DEFAULT_REQUEST_TIMEOUT, ROUTES } from '@/utils';
 
 const useGrocery = (): UseGroceryOutput => {
     const [grocery, setGrocery] = useState<Grocery>();
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState('');
 
     const fetchGrocery = useCallback(
@@ -141,12 +141,17 @@ const useGrocery = (): UseGroceryOutput => {
         setErrorMessage('');
     }, [setErrorMessage]);
 
+    const finishInitialLoading = useCallback(() => {
+        setIsLoading(false);
+    }, [setIsLoading]);
+
     return {
         clearErrorMessage,
         createGrocery,
         deleteGrocery,
         errorMessage,
         fetchGrocery,
+        finishInitialLoading,
         grocery,
         isLoading,
         updateGrocery,

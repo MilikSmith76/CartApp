@@ -7,6 +7,7 @@ interface UseCartOutput {
     deleteCart: () => Promise<boolean>;
     errorMessage: string;
     fetchCart: (id?: string) => Promise<void>;
+    finishInitialLoading: () => void;
     isLoading: boolean;
     updateCart: (value?: Cart) => Promise<boolean>;
 }

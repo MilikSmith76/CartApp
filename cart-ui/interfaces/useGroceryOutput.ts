@@ -6,6 +6,7 @@ interface UseGroceryOutput {
     deleteGrocery: () => Promise<boolean>;
     errorMessage: string;
     fetchGrocery: (id?: string) => Promise<void>;
+    finishInitialLoading: () => void;
     grocery?: Grocery;
     isLoading: boolean;
     updateGrocery: (value?: Grocery) => Promise<boolean>;

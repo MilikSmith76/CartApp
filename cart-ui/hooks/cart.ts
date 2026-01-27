@@ -10,7 +10,7 @@ import { DEFAULT_REQUEST_TIMEOUT, ROUTES } from '@/utils';
 
 const useCart = (): UseCartOutput => {
     const [cart, setCart] = useState<Cart>();
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState('');
 
     const fetchCart = useCallback(
@@ -139,6 +139,10 @@ const useCart = (): UseCartOutput => {
         setErrorMessage('');
     }, [setErrorMessage]);
 
+    const finishInitialLoading = useCallback(() => {
+        setIsLoading(false);
+    }, [setIsLoading]);
+
     return {
         cart,
         clearErrorMessage,
@@ -146,6 +150,7 @@ const useCart = (): UseCartOutput => {
         deleteCart,
         errorMessage,
         fetchCart,
+        finishInitialLoading,
         isLoading,
         updateCart,
     };
