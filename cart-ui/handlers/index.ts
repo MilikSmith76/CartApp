@@ -1,2 +1,2 @@
 export { default as BaseResourceHandler } from './baseResourceHandler';
-export { default as baseResourcesHandler } from './baseResourcesHandler';
+export { default as BaseResourcesHandler } from './baseResourcesHandler';

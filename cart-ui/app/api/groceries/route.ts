@@ -2,47 +2,17 @@ import type { NextRequest } from 'next/server';
 
 import { NextResponse } from 'next/server';
 
-import type { Grocery } from '@/interfaces';
-
+import { BaseResourcesHandler } from '@/handlers';
 import { GroceryService } from '@/services';
-import { getNumberParametersErrorResponse, getRequestParams } from '@/utils';
 
 const grocerySerice = new GroceryService();
 
-const GET = async (request: NextRequest): Promise<NextResponse> => {
-    const { limit, page, search } = getRequestParams(
-        request.nextUrl.searchParams
-    );
+const groceriesHandler = new BaseResourcesHandler(grocerySerice);
 
-    const errorResponse = getNumberParametersErrorResponse(
-        ['page', 'limit'],
-        [page as string, limit as string]
-    );
+const GET = async (request: NextRequest): Promise<NextResponse> =>
+    groceriesHandler.get(request);
 
-    if (errorResponse) {
-        return errorResponse;
-    }
-
-    const response = await grocerySerice.getPage({ limit, page, search });
-
-    return NextResponse.json(response);
-};
-
-const POST = async (request: NextRequest): Promise<NextResponse> => {
-    const { description, imageUrl, name, price, purchased } =
-        await request.json();
-
-    const input: Grocery = {
-        description,
-        imageUrl,
-        name,
-        price,
-        purchased,
-    };
-
-    const response = await grocerySerice.create(input);
-
-    return NextResponse.json(response);
-};
+const POST = async (request: NextRequest): Promise<NextResponse> =>
+    groceriesHandler.post(request);
 
 export { GET, POST };

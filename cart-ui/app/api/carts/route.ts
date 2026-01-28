@@ -1,42 +1,16 @@
-import type { NextRequest } from 'next/server';
+import type { NextRequest, NextResponse } from 'next/server';
 
-import { NextResponse } from 'next/server';
-
-import type { Cart } from '@/interfaces';
-
+import { BaseResourcesHandler } from '@/handlers';
 import { CartService } from '@/services';
-import { getNumberParametersErrorResponse, getRequestParams } from '@/utils';
 
 const cartService = new CartService();
 
-const GET = async (request: NextRequest): Promise<NextResponse> => {
-    const { limit, page } = getRequestParams(request.nextUrl.searchParams);
+const cartsHandler = new BaseResourcesHandler(cartService);
 
-    const errorResponse = getNumberParametersErrorResponse(
-        ['page', 'limit'],
-        [page as string, limit as string]
-    );
+const GET = async (request: NextRequest): Promise<NextResponse> =>
+    cartsHandler.get(request);
 
-    if (errorResponse) {
-        return errorResponse;
-    }
-
-    const response = await cartService.getPage({ limit, page });
-
-    return NextResponse.json(response);
-};
-
-const POST = async (request: NextRequest): Promise<NextResponse> => {
-    const { description, name } = await request.json();
-
-    const input: Cart = {
-        description,
-        name,
-    };
-
-    const response = await cartService.create(input);
-
-    return NextResponse.json(response);
-};
+const POST = async (request: NextRequest): Promise<NextResponse> =>
+    cartsHandler.post(request);
 
 export { GET, POST };

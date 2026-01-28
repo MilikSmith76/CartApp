@@ -1,74 +1,27 @@
-import type { NextRequest } from 'next/server';
+import type { NextRequest, NextResponse } from 'next/server';
 
-import { NextResponse } from 'next/server';
+import type { RouteParameters } from '@/interfaces';
 
-import type { Cart } from '@/interfaces';
-
+import { BaseResourceHandler } from '@/handlers';
 import { CartService } from '@/services';
-import { getRequiredIdErrorResponse } from '@/utils';
 
 const cartService = new CartService();
 
+const cartHandler = new BaseResourceHandler(cartService);
+
 const GET = async (
-    _request: NextRequest,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    context: any
-): Promise<NextResponse> => {
-    const { id } = await context.params;
-
-    const errorResponse = getRequiredIdErrorResponse(id);
-
-    if (errorResponse) {
-        return errorResponse;
-    }
-
-    const response = await cartService.get(+id);
-
-    return NextResponse.json(response);
-};
+    request: NextRequest,
+    context: RouteParameters
+): Promise<NextResponse> => cartHandler.get(request, context);
 
 const PUT = async (
     request: NextRequest,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    context: any
-): Promise<NextResponse> => {
-    const { id } = await context.params;
-
-    const errorResponse = getRequiredIdErrorResponse(id);
-
-    if (errorResponse) {
-        return errorResponse;
-    }
-
-    const { description, name } = await request.json();
-
-    const input: Cart = {
-        description,
-        id: +id,
-        name,
-    };
-
-    const response = await cartService.update(+id, input);
-
-    return NextResponse.json(response);
-};
+    context: RouteParameters
+): Promise<NextResponse> => cartHandler.put(request, context);
 
 const DELETE = async (
-    _request: NextRequest,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    context: any
-): Promise<NextResponse> => {
-    const { id } = await context.params;
-
-    const errorResponse = getRequiredIdErrorResponse(id);
-
-    if (errorResponse) {
-        return errorResponse;
-    }
-
-    const response = await cartService.delete(+id);
-
-    return NextResponse.json(response);
-};
+    request: NextRequest,
+    context: RouteParameters
+): Promise<NextResponse> => cartHandler.delete(request, context);
 
 export { DELETE, GET, PUT };
