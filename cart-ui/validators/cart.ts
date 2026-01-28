@@ -11,6 +11,10 @@ const cartValidator = (value?: Cart): ValidationErrors => {
         errors.name = FORM_REQUIRED_FEILD_ERROR;
     }
 
+    if (!value?.description) {
+        errors.description = FORM_REQUIRED_FEILD_ERROR;
+    }
+
     return errors;
 };
 

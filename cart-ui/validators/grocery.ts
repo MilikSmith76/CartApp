@@ -11,6 +11,10 @@ const groceryValidator = (value?: Grocery): ValidationErrors => {
         errors.name = FORM_REQUIRED_FEILD_ERROR;
     }
 
+    if (!value?.description) {
+        errors.description = FORM_REQUIRED_FEILD_ERROR;
+    }
+
     if (!value?.imageUrl) {
         errors.imageUrl = FORM_REQUIRED_FEILD_ERROR;
     }
