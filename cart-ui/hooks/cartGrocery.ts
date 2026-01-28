@@ -20,6 +20,7 @@ const useCartGrocery = (): UseCartGroceryOutput => {
             }
 
             setIsLoading(true);
+            setErrorMessage('');
 
             try {
                 const result = await axios.get<CartGrocery>(
@@ -48,6 +49,7 @@ const useCartGrocery = (): UseCartGroceryOutput => {
             let success = true;
 
             setIsLoading(true);
+            setErrorMessage('');
 
             try {
                 const result = await axios.post<
@@ -83,6 +85,7 @@ const useCartGrocery = (): UseCartGroceryOutput => {
             let success = true;
 
             setIsLoading(true);
+            setErrorMessage('');
 
             try {
                 const result = await axios.put<
@@ -117,6 +120,7 @@ const useCartGrocery = (): UseCartGroceryOutput => {
         let success = true;
 
         setIsLoading(true);
+        setErrorMessage('');
 
         try {
             await axios.delete(

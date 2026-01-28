@@ -20,6 +20,7 @@ const useCart = (): UseCartOutput => {
             }
 
             setIsLoading(true);
+            setErrorMessage('');
 
             try {
                 const result = await axios.get<Cart>(
@@ -48,6 +49,7 @@ const useCart = (): UseCartOutput => {
             let success = true;
 
             setIsLoading(true);
+            setErrorMessage('');
 
             try {
                 const result = await axios.post<
@@ -83,6 +85,7 @@ const useCart = (): UseCartOutput => {
             let success = true;
 
             setIsLoading(true);
+            setErrorMessage('');
 
             try {
                 const result = await axios.put<Cart, AxiosResponse<Cart>, Cart>(
@@ -115,6 +118,7 @@ const useCart = (): UseCartOutput => {
         let success = true;
 
         setIsLoading(true);
+        setErrorMessage('');
 
         try {
             await axios.delete(`${ROUTES.apiCarts}/${cart?.id}`, {
