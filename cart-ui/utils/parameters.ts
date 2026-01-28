@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 import type { ParameterErrors, Parameters } from '@/interfaces';
 
-import { BAD_REQUEST } from './constants';
+import { BAD_REQUEST_ERROR } from './constants';
 
 const getRequestParams = (searchParams: URLSearchParams): Parameters => {
     const params: Parameters = {};
@@ -17,21 +17,23 @@ const getRequestParams = (searchParams: URLSearchParams): Parameters => {
 const getParameterErrorsResponse = (
     paramErrors: ParameterErrors
 ): NextResponse<ParameterErrors> => {
-    return NextResponse.json(paramErrors, { status: BAD_REQUEST });
+    return NextResponse.json(paramErrors, { status: BAD_REQUEST_ERROR });
 };
 
 const getRequiredIdErrorResponse = (
     idParam: string
 ): NextResponse<ParameterErrors> | undefined => {
-    if (isNaN(+idParam)) {
-        return getParameterErrorsResponse({
-            errors: [
-                {
-                    error: `Parameter "id" has a value "${idParam}" but should be a number.`,
-                },
-            ],
-        });
+    if (!isNaN(+idParam)) {
+        return;
     }
+
+    return getParameterErrorsResponse({
+        errors: [
+            {
+                error: `Parameter "id" has a value "${idParam}" but should be a number.`,
+            },
+        ],
+    });
 };
 
 const getNumberParametersErrorResponse = (
@@ -47,7 +49,11 @@ const getNumberParametersErrorResponse = (
     const paramErrors: ParameterErrors = { errors: [] };
 
     paramValues.forEach((value, index) => {
-        if (value && isNaN(+value)) {
+        if (!value) {
+            return;
+        }
+
+        if (isNaN(+value)) {
             paramErrors.errors.push({
                 error: `Parameter "${paramNames[index]}" has a value "${value}" but should be a number.`,
             });

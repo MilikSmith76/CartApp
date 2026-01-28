@@ -27,6 +27,7 @@ export type * from './paginationResponse';
 export type * from './parameterErrors';
 export type * from './parameters';
 export type * from './rootLayoutProps';
+export type * from './routeParameters';
 export type * from './successResponse';
 export type * from './textFormFieldProps';
 export type * from './updateCartPageProps';

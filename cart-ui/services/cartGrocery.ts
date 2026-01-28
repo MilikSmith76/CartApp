@@ -1,6 +1,7 @@
 import type { AxiosResponse } from 'axios';
 
 import axios from 'axios';
+import { keys } from 'lodash';
 
 import type {
     BulkUpsertRequest,
@@ -10,7 +11,13 @@ import type {
     GroceryApi,
 } from '@/interfaces';
 
-import { DEFAULT_REQUEST_TIMEOUT, ENDPOINT_RESOURCES } from '@/utils';
+import {
+    BAD_REQUEST_ERROR,
+    DEFAULT_REQUEST_TIMEOUT,
+    ENDPOINT_RESOURCES,
+    RequestError,
+} from '@/utils';
+import { cartGroceryValidator } from '@/validators';
 
 import BaseResourceService from './baseResource';
 import GroceryService from './grocery';
@@ -89,6 +96,31 @@ class CartGroceryService extends BaseResourceService<
         this.cache.clear();
 
         return response;
+    }
+
+    public validate({
+        cartId,
+        groceryId,
+        id,
+        purchased,
+        quantity,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    }: any): CartGrocery {
+        const cartGrocery: CartGrocery = {
+            cartId,
+            groceryId,
+            id: id && !isNaN(id) ? +id : undefined,
+            purchased,
+            quantity,
+        };
+
+        const validationErrors = cartGroceryValidator(cartGrocery);
+
+        if (keys(validationErrors).length > 0) {
+            throw new RequestError('Invalid Request', BAD_REQUEST_ERROR);
+        }
+
+        return cartGrocery;
     }
 }
 

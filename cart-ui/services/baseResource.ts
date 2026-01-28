@@ -157,6 +157,9 @@ abstract class BaseResourceService<
         return response;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    public abstract validate(body: any): UiType;
+
     private getIndividualCacheKey(id: number): string {
         return `${this.resourceName}/${id}`;
     }

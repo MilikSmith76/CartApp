@@ -3,7 +3,11 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 import { CartGroceryService } from '@/services';
-import { getNumberParametersErrorResponse, getRequestParams } from '@/utils';
+import {
+    getErrorResponse,
+    getNumberParametersErrorResponse,
+    getRequestParams,
+} from '@/utils';
 
 const cartGroceryService = new CartGroceryService();
 
@@ -29,9 +33,13 @@ const GET = async (request: NextRequest): Promise<NextResponse> => {
 const PUT = async (request: NextRequest): Promise<NextResponse> => {
     const { items } = await request.json();
 
-    const response = await cartGroceryService.bulkUpsert(items);
+    try {
+        const response = await cartGroceryService.bulkUpsert(items);
 
-    return NextResponse.json(response);
+        return NextResponse.json(response);
+    } catch (error) {
+        return getErrorResponse(error);
+    }
 };
 
 export { GET, PUT };

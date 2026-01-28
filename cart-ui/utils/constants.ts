@@ -1,6 +1,6 @@
 import type { BulkUpsertRequest } from '@/interfaces';
 
-const BAD_REQUEST = 400;
+const BAD_REQUEST_ERROR = 400;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const DEFAULT_BULK_REQUEST: BulkUpsertRequest<any> = { items: [] };
@@ -29,7 +29,17 @@ const DEFAULT_REFRESH_INTERVAL = 10 * 60 * 1000;
 
 const DEFAULT_REQUEST_TIMEOUT = 10 * 1000;
 
+const ENDPOINT_RESOURCES = {
+    cartGrocery: 'cart_groceries',
+    carts: 'carts',
+    groceries: 'groceries',
+};
+
 const FORM_REQUIRED_FEILD_ERROR = 'Field required';
+
+const INTERNAL_ERROR = 500;
+
+const NOT_FOUND_ERROR = 404;
 
 const ROUTES = {
     apiCartGroceries: '/api/cartGroceries',
@@ -39,14 +49,8 @@ const ROUTES = {
     groceries: '/groceries',
 };
 
-const ENDPOINT_RESOURCES = {
-    cartGrocery: 'cart_groceries',
-    carts: 'carts',
-    groceries: 'groceries',
-};
-
 export {
-    BAD_REQUEST,
+    BAD_REQUEST_ERROR,
     DEFAULT_BULK_REQUEST,
     DEFAULT_CACHE_TIME_TO_LIVE,
     DEFAULT_DEBOUNCE_TIME_MS,
@@ -62,5 +66,7 @@ export {
     DEFAULT_REQUEST_TIMEOUT,
     ENDPOINT_RESOURCES,
     FORM_REQUIRED_FEILD_ERROR,
+    INTERNAL_ERROR,
+    NOT_FOUND_ERROR,
     ROUTES,
 };
