@@ -1,7 +1,7 @@
 import type { AxiosResponse } from 'axios';
+import type { LRUCache } from 'lru-cache';
 
 import axios from 'axios';
-import { LRUCache } from 'lru-cache';
 
 import type {
     ApiPaginationResponse,
@@ -11,19 +11,12 @@ import type {
     SuccessResponse,
 } from '@/interfaces';
 
-import {
-    DEFAULT_CACHE_TIME_TO_LIVE,
-    DEFAULT_MAX_CACHE_SIZE,
-    DEFAULT_PAGE_SIZE,
-    DEFAULT_REQUEST_TIMEOUT,
-} from '@/utils';
+import { DEFAULT_PAGE_SIZE, DEFAULT_REQUEST_TIMEOUT } from '@/utils';
 
 abstract class BaseResourceService<
     UiType extends BaseResource,
     ApiType extends BaseResource,
 > {
-    protected cache: LRUCache<string, UiType | PaginationResponse<UiType>>;
-
     protected endpoint: string;
 
     private apiToUiFunc: (value: ApiType) => UiType;
@@ -37,11 +30,6 @@ abstract class BaseResourceService<
         apiToUiFunc: (value: ApiType) => UiType,
         uiToApiFunc: (value: UiType) => ApiType
     ) {
-        this.cache = new LRUCache({
-            max: DEFAULT_MAX_CACHE_SIZE,
-            ttl: DEFAULT_CACHE_TIME_TO_LIVE,
-        });
-
         this.endpoint = `${process.env.API_HOST}/${resourceName}`;
         this.resourceName = resourceName;
 
@@ -62,9 +50,11 @@ abstract class BaseResourceService<
 
         const id = response?.id ?? 0;
 
-        this.cache.clear();
+        const cache = this.getCache();
 
-        this.cache.set(this.getIndividualCacheKey(id), response);
+        cache.clear();
+
+        cache.set(this.getIndividualCacheKey(id), response);
 
         return response;
     }
@@ -75,15 +65,17 @@ abstract class BaseResourceService<
             { timeout: DEFAULT_REQUEST_TIMEOUT }
         );
 
-        this.cache.clear();
+        this.getCache().clear();
 
         return data;
     }
 
     public async get(id: number): Promise<UiType> {
+        const cache = this.getCache();
+
         const cacheKey = this.getIndividualCacheKey(id);
 
-        const cacheHit = this.cache.get(cacheKey);
+        const cacheHit = cache.get(cacheKey);
 
         if (cacheHit) {
             return cacheHit as UiType;
@@ -95,7 +87,7 @@ abstract class BaseResourceService<
 
         const response = this.apiToUiFunc(data);
 
-        this.cache.set(cacheKey, response);
+        cache.set(cacheKey, response);
 
         return response;
     }
@@ -106,9 +98,11 @@ abstract class BaseResourceService<
         page = 0,
         search,
     }: Parameters): Promise<PaginationResponse<UiType>> {
+        const cache = this.getCache();
+
         const cacheKey = this.getListCacheKey({ cartId, limit, page, search });
 
-        const cacheHit = this.cache.get(cacheKey);
+        const cacheHit = cache.get(cacheKey);
 
         if (cacheHit) {
             return cacheHit as PaginationResponse<UiType>;
@@ -134,7 +128,7 @@ abstract class BaseResourceService<
             results: data.results.map(this.apiToUiFunc),
         };
 
-        this.cache.set(cacheKey, response);
+        cache.set(cacheKey, response);
 
         return response;
     }
@@ -150,15 +144,22 @@ abstract class BaseResourceService<
 
         const response = this.apiToUiFunc(data);
 
-        this.cache.clear();
+        const cache = this.getCache();
 
-        this.cache.set(this.getIndividualCacheKey(id), response);
+        cache.clear();
+
+        cache.set(this.getIndividualCacheKey(id), response);
 
         return response;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public abstract validate(body: any): UiType;
+
+    protected abstract getCache(): LRUCache<
+        string,
+        UiType | PaginationResponse<UiType>
+    >;
 
     private getIndividualCacheKey(id: number): string {
         return `${this.resourceName}/${id}`;

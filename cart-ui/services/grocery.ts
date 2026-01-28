@@ -1,13 +1,25 @@
 import { keys } from 'lodash';
+import { LRUCache } from 'lru-cache';
 
-import type { Grocery, GroceryApi } from '@/interfaces';
+import type { Grocery, GroceryApi, PaginationResponse } from '@/interfaces';
 
-import { BAD_REQUEST_ERROR, ENDPOINT_RESOURCES, RequestError } from '@/utils';
+import {
+    BAD_REQUEST_ERROR,
+    DEFAULT_CACHE_TIME_TO_LIVE,
+    DEFAULT_MAX_CACHE_SIZE,
+    ENDPOINT_RESOURCES,
+    RequestError,
+} from '@/utils';
 import { groceryValidator } from '@/validators';
 
 import BaseResourceService from './baseResource';
 
 class GroceryService extends BaseResourceService<Grocery, GroceryApi> {
+    private static cache: LRUCache<
+        string,
+        Grocery | PaginationResponse<Grocery>
+    >;
+
     constructor() {
         super(
             ENDPOINT_RESOURCES.groceries,
@@ -77,6 +89,20 @@ class GroceryService extends BaseResourceService<Grocery, GroceryApi> {
         }
 
         return grocery;
+    }
+
+    protected getCache(): LRUCache<
+        string,
+        Grocery | PaginationResponse<Grocery>
+    > {
+        if (!GroceryService.cache) {
+            GroceryService.cache = new LRUCache({
+                max: DEFAULT_MAX_CACHE_SIZE,
+                ttl: DEFAULT_CACHE_TIME_TO_LIVE,
+            });
+        }
+
+        return GroceryService.cache;
     }
 }
 

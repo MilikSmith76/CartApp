@@ -2,6 +2,7 @@ import type { AxiosResponse } from 'axios';
 
 import axios from 'axios';
 import { keys } from 'lodash';
+import { LRUCache } from 'lru-cache';
 
 import type {
     BulkUpsertRequest,
@@ -9,10 +10,13 @@ import type {
     CartGrocery,
     CartGroceryApi,
     GroceryApi,
+    PaginationResponse,
 } from '@/interfaces';
 
 import {
     BAD_REQUEST_ERROR,
+    DEFAULT_CACHE_TIME_TO_LIVE,
+    DEFAULT_MAX_CACHE_SIZE,
     DEFAULT_REQUEST_TIMEOUT,
     ENDPOINT_RESOURCES,
     RequestError,
@@ -26,6 +30,11 @@ class CartGroceryService extends BaseResourceService<
     CartGrocery,
     CartGroceryApi
 > {
+    private static cache: LRUCache<
+        string,
+        CartGrocery | PaginationResponse<CartGrocery>
+    >;
+
     constructor() {
         super(
             ENDPOINT_RESOURCES.cartGrocery,
@@ -93,7 +102,7 @@ class CartGroceryService extends BaseResourceService<
             items: data.items.map(CartGroceryService.apiToUi),
         };
 
-        this.cache.clear();
+        this.getCache().clear();
 
         return response;
     }
@@ -121,6 +130,20 @@ class CartGroceryService extends BaseResourceService<
         }
 
         return cartGrocery;
+    }
+
+    protected getCache(): LRUCache<
+        string,
+        CartGrocery | PaginationResponse<CartGrocery>
+    > {
+        if (!CartGroceryService.cache) {
+            CartGroceryService.cache = new LRUCache({
+                max: DEFAULT_MAX_CACHE_SIZE,
+                ttl: DEFAULT_CACHE_TIME_TO_LIVE,
+            });
+        }
+
+        return CartGroceryService.cache;
     }
 }
 
