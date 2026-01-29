@@ -6,4 +6,11 @@ const getValue = <Type>(object: Type | undefined, defaultValue: Type): Type => {
     return object ?? defaultValue;
 };
 
-export { duplicate, getValue };
+const getNumber = (
+    value: string,
+    defaultValue: number | undefined = undefined
+): number | undefined => {
+    return value && !isNaN(+value) ? +value : defaultValue;
+};
+
+export { duplicate, getNumber, getValue };

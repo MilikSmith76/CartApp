@@ -22,7 +22,7 @@ export {
 
 export { RequestError } from './errors';
 
-export { duplicate, getValue } from './general';
+export { duplicate, getNumber, getValue } from './general';
 
 export {
     getNumberParametersErrorResponse,

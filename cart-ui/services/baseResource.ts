@@ -11,7 +11,7 @@ import type {
     SuccessResponse,
 } from '@/interfaces';
 
-import { DEFAULT_PAGE_SIZE, DEFAULT_REQUEST_TIMEOUT } from '@/utils';
+import { DEFAULT_PAGE_SIZE, DEFAULT_REQUEST_TIMEOUT, getValue } from '@/utils';
 
 abstract class BaseResourceService<
     UiType extends BaseResource,
@@ -48,7 +48,7 @@ abstract class BaseResourceService<
 
         const response = this.apiToUiFunc(data);
 
-        const id = response?.id ?? 0;
+        const id = getValue(response?.id, 0);
 
         const cache = this.getCache();
 

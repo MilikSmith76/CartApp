@@ -8,6 +8,7 @@ import {
     DEFAULT_CACHE_TIME_TO_LIVE,
     DEFAULT_MAX_CACHE_SIZE,
     ENDPOINT_RESOURCES,
+    getNumber,
     RequestError,
 } from '@/utils';
 import { groceryValidator } from '@/validators';
@@ -75,7 +76,7 @@ class GroceryService extends BaseResourceService<Grocery, GroceryApi> {
     }: any): Grocery {
         const grocery: Grocery = {
             description,
-            id: id && !isNaN(id) ? +id : undefined,
+            id: getNumber(id),
             imageUrl,
             name,
             price,

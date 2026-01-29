@@ -16,6 +16,7 @@ import {
     DEFAULT_MAX_CART_GROCERIES,
     DEFAULT_REQUEST_TIMEOUT,
     duplicate,
+    getValue,
     ROUTES,
 } from '@/utils';
 
@@ -102,7 +103,7 @@ const useBulkCartGroceriesRequest = (): UseBulkCartGroceriesRequestOutput => {
                     {
                         cartId,
                         grocery: grocery,
-                        groceryId: grocery.id ?? 0,
+                        groceryId: getValue(grocery.id, 0),
                         purchased: false,
                         quantity: 1,
                     },

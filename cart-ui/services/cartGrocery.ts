@@ -19,6 +19,8 @@ import {
     DEFAULT_MAX_CACHE_SIZE,
     DEFAULT_REQUEST_TIMEOUT,
     ENDPOINT_RESOURCES,
+    getNumber,
+    getValue,
     RequestError,
 } from '@/utils';
 import { cartGroceryValidator } from '@/validators';
@@ -50,9 +52,9 @@ class CartGroceryService extends BaseResourceService<
         purchased,
         quantity,
     }: CartGroceryApi): CartGrocery {
-        const cartId = cart?.id ?? 0;
+        const cartId = getValue(cart?.id, 0);
 
-        const groceryId = apiGrocery?.id ?? 0;
+        const groceryId = getValue(apiGrocery?.id, 0);
 
         const grocery = GroceryService.apiToUi(
             apiGrocery as unknown as GroceryApi
@@ -118,7 +120,7 @@ class CartGroceryService extends BaseResourceService<
         const cartGrocery: CartGrocery = {
             cartId,
             groceryId,
-            id: id && !isNaN(id) ? +id : undefined,
+            id: getNumber(id),
             purchased,
             quantity,
         };

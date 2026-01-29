@@ -15,6 +15,7 @@ import {
     DEFAULT_ERROR_RETRY_INTERVAL,
     DEFAULT_PAGE_SIZE,
     DEFAULT_REFRESH_INTERVAL,
+    getValue,
     ROUTES,
 } from '@/utils';
 
@@ -45,16 +46,19 @@ const useGroceries = (): UseGroceriesOutput => {
         }
     );
 
-    const groceries = useMemo(() => data?.results ?? [], [data]);
+    const groceries = useMemo(() => getValue(data?.results, []), [data]);
 
-    const total = useMemo(() => data?.count ?? 0, [data]);
+    const total = useMemo(() => getValue(data?.count, 0), [data]);
 
-    const errorMessage = useMemo((): string => error?.message ?? '', [error]);
+    const errorMessage = useMemo(
+        (): string => getValue(error?.message, ''),
+        [error]
+    );
 
     const fetchGroceries = useCallback(
         async (page: number = 0, search?: string) => {
             setPage(page);
-            setSearch(search ?? '');
+            setSearch(getValue(search, ''));
         },
         [setPage, setSearch]
     );

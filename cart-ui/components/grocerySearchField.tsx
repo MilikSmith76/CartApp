@@ -12,6 +12,7 @@ import { useCallback, useEffect, useState } from 'react';
 import type { Grocery, GrocerySearchFieldProps } from '@/interfaces';
 
 import { useGroceries } from '@/hooks';
+import { getValue } from '@/utils';
 
 import Button from './button';
 import Loading from './loading';
@@ -34,7 +35,7 @@ const GrocerySearchField = ({
     const onClose = useCallback(() => setQuery(''), [setQuery]);
 
     const getDisplayName = useCallback(
-        (grocery: Grocery | undefined) => grocery?.name ?? '',
+        (grocery: Grocery | undefined) => getValue(grocery?.name, ''),
         []
     );
 
